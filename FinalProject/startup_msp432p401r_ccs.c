@@ -104,6 +104,11 @@ extern void PORT4_IRQHandler    (void) __attribute__((weak,alias("Default_Handle
 extern void PORT5_IRQHandler    (void) __attribute__((weak,alias("Default_Handler")));
 extern void PORT6_IRQHandler    (void) __attribute__((weak,alias("Default_Handler")));
 
+extern void xPortSysTickHandler(void);
+extern void vPortSVCHandler(void);
+extern void xPortPendSVHandler(void);
+
+
 /* Interrupt vector table.  Note that the proper constructs must be placed on this to */
 /* ensure that it ends up at physical address 0x0000.0000 or at the start of          */
 /* the program if located at a start address other than 0.                            */
@@ -123,11 +128,11 @@ void (* const interruptVectors[])(void) =
     0,                                     /* Reserved                  */
     0,                                     /* Reserved                  */
     0,                                     /* Reserved                  */
-    SVC_Handler,                           /* SVCall handler            */
+    vPortSVCHandler,                           /* SVCall handler            */
     DebugMon_Handler,                      /* Debug monitor handler     */
     0,                                     /* Reserved                  */
-    PendSV_Handler,                        /* The PendSV handler        */
-    SysTick_Handler,                       /* The SysTick handler       */
+    xPortPendSVHandler,                        /* The PendSV handler        */
+    xPortSysTickHandler,                       /* The SysTick handler       */
     PSS_IRQHandler,                        /* PSS Interrupt             */
     CS_IRQHandler,                         /* CS Interrupt              */
     PCM_IRQHandler,                        /* PCM Interrupt             */
