@@ -5,6 +5,57 @@
  *     Authors: Rusheel Dasari and Khiem Vu
  */
 
+/*
+ * struct Block {
+ int rel_x;
+ int rel_y;
+ bool axis;
+ } typedef Block;
+
+ struct Piece {
+ int x;
+ int y;
+ int left_max;
+ int right_max;
+ int bottom_max;
+ Block blocks[4];
+ } typedef Piece;
+
+ struct LineBlock {
+ int rel_x;
+ int rel_y;
+ } typedef LineBlock;
+
+ struct SquareBlock {
+ int rel_x;
+ int rel_y;
+ } typedef SquareBlock;
+
+ struct LinePiece {
+ int x;
+ int y;
+ char axis;
+ int left_max;
+ int right_max;
+ int bottom_max;
+ LineBlock blocks[4];
+ } typedef LinePiece;
+
+ struct SquarePiece {
+ int x;
+ int y;
+ char axis;
+ int left_max;
+ int right_max;
+ int bottom_max;
+ SquareBlock blocks[4];
+ } typedef SquarePiece;
+ *
+ *
+ *
+ *
+ * */
+
 #ifndef TETRIS_H_
 #define TETRIS_H_
 
@@ -14,9 +65,13 @@
 #define GRID_WIDTH      10
 #define GRID_HEIGHT     24
 
-enum PieceType {EMPTY, LINE, SQUARE, J, L, S, Z, T} typedef PieceType;
+enum PieceType
+{
+    EMPTY, LINE, SQUARE, J, L, S, Z, T
+}typedef PieceType;
 
-struct Block {
+struct Block
+{
     bool empty;
     bool linked;
     int x;
@@ -25,11 +80,12 @@ struct Block {
     int y_offset;
     bool axis;
     PieceType type;
-} typedef Block;
+}typedef Block;
 
-Block** board;
+Block **board;
 
-struct Piece {
+struct Piece
+{
     int x;
     int y;
     int left_max;
@@ -38,11 +94,11 @@ struct Piece {
     char rotation;
     Block blocks[4];
     PieceType type;
-} typedef Piece;
+}typedef Piece;
 
-Piece* current;
-Piece* next;
-Piece* held;
+Piece *current;
+Piece *next;
+Piece *held;
 
 void generate_next(void);
 void init_board(void);
