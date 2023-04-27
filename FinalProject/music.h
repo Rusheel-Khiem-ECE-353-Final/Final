@@ -80,7 +80,3 @@ void music_init(void);
 void music_play_song(void);
 
 #endif /* MUSIC_H_ */
-
-
-
-#endif /* MUSIC_H_ */

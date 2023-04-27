@@ -45,8 +45,8 @@
 									<listOptionValue builtIn="false" value="${CCS_BASE_ROOT}/arm/include"/>
 									<listOptionValue builtIn="false" value="${CCS_BASE_ROOT}/arm/include/CMSIS"/>
 									<listOptionValue builtIn="false" value="${CG_TOOL_ROOT}/include"/>
-									<listOptionValue builtIn="false" value="$(PROJECT_LOC)/../code-FreeRTOS/include"/>
-									<listOptionValue builtIn="false" value="$(PROJECT_LOC)/../code-FreeRTOS/portable/CCS/ARM_CM4F"/>
+									<listOptionValue builtIn="false" value="${PROJECT_LOC}/../code-FreeRTOS/include"/>
+									<listOptionValue builtIn="false" value="${PROJECT_LOC}/../code-FreeRTOS/portable/CCS/ARM_CM4F"/>
 									<listOptionValue builtIn="false" value="${PROJECT_ROOT}"/>
 								</option>
 								<option id="com.ti.ccstudio.buildDefinitions.MSP432_20.2.compilerID.DEBUGGING_MODEL.985616774" name="Debugging model" superClass="com.ti.ccstudio.buildDefinitions.MSP432_20.2.compilerID.DEBUGGING_MODEL" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.MSP432_20.2.compilerID.DEBUGGING_MODEL.SYMDEBUG__DWARF" valueType="enumerated"/>
