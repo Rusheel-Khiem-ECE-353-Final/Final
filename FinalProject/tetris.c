@@ -18,60 +18,36 @@ void generate_next() {
 
     switch (next->type) {
     case LINE:
-        Block block1;
-        Block block2;
-        Block block3;
-        Block block4;
         next->blocks;
+        next->rotate = rotate_Line_piece_right;
         break;
     case SQUARE:
-        Block block1;
-        Block block2;
-        Block block3;
-        Block block4;
         next->blocks;
+        next->rotate = rotate_Square_piece_right;
         break;
     case J:
-        Block block1;
-        Block block2;
-        Block block3;
-        Block block4;
         next->blocks;
+        next->rotate = rotate_J_piece_right;
         break;
     case L:
-        Block block1;
-        Block block2;
-        Block block3;
-        Block block4;
         next->blocks;
+        next->rotate = rotate_L_piece_right;
         break;
     case S:
-        Block block1;
-        Block block2;
-        Block block3;
-        Block block4;
         next->blocks;
+        next->rotate = rotate_S_piece_right;
         break;
     case Z:
-        Block block1;
-        Block block2;
-        Block block3;
-        Block block4;
         next->blocks;
+        next->rotate = rotate_Z_piece_right;
         break;
     case T:
-        Block block1;
-        Block block2;
-        Block block3;
-        Block block4;
         next->blocks;
+        next->rotate = rotate_T_piece_right;
         break;
     default:
-        Block block1;
-        Block block2;
-        Block block3;
-        Block block4;
         next->blocks;
+        next->rotate = NULL;
         break;
     }
 }
@@ -107,9 +83,9 @@ void init_board() {
 
 void init_game() {
     init_board();
-    current = malloc(sizeof(Block));
-    next = malloc(sizeof(Block));
-    held = malloc(sizeof(Block));
+    current = malloc(sizeof(Piece));
+    next = malloc(sizeof(Piece));
+    held = malloc(sizeof(Piece));
 
     if(current == NULL || next == NULL || held == NULL) {
         exit(1);

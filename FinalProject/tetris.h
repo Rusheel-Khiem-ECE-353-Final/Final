@@ -92,7 +92,8 @@ struct Piece
     int right_max;
     int bottom_max;
     char rotation;
-    Block blocks[4];
+    void (*rotate)(int);
+    Block *blocks;
     PieceType type;
 }typedef Piece;
 
@@ -109,5 +110,12 @@ void rotate_current_flip(void);
 void swap_held(void);
 void land_current(void);
 void clear_lines(void);
+void rotate_Line_piece_right(Piece*);
+void rotate_Square_piece_right(Piece*);
+void rotate_L_piece_right(Piece*);
+void rotate_J_piece_right(Piece*);
+void rotate_S_piece_right(Piece*);
+void rotate_Z_piece_right(Piece*);
+void rotate_T_piece_right(Piece*);
 
 #endif /* TETRIS_H_ */
