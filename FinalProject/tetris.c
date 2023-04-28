@@ -7,8 +7,10 @@
 
 #include "tetris.h"
 
-void generate_next() {
-    PieceType type = (PieceType)(rand() % 7 + 1));
+void generate_next()
+{
+    PieceType type = (PieceType) (rand() % 7 + 1)
+    );
     next->type = type;
     next->x = -1;
     next->y = -1;
@@ -16,7 +18,8 @@ void generate_next() {
     next->left_max = -1;
     next->bottom_max = -1;
 
-    switch (next->type) {
+    switch (next->type)
+    {
     case LINE:
         next->blocks;
         next->rotate = rotate_Line_piece_right;
@@ -52,23 +55,29 @@ void generate_next() {
     }
 }
 
-void init_board() {
+void init_board()
+{
     int row, col;
 
     board = malloc(sizeof(Block*) * GRID_HEIGHT);
-    if (board == NULL) {
+    if (board == NULL)
+    {
         exit(1);
     }
 
-    for(row = 0; row < GRID_HEIGHT; row++) {
+    for (row = 0; row < GRID_HEIGHT; row++)
+    {
         *(board + row) = malloc(sizeof(Block) * GRID_WIDTH);
-        if ((*(board + row)) == NULL) {
+        if ((*(board + row)) == NULL)
+        {
             exit(1);
         }
     }
 
-    for(row = 0; row < GRID_HEIGHT; row++) {
-        for(col = 0; col < GRID_WIDTH; col++) {
+    for (row = 0; row < GRID_HEIGHT; row++)
+    {
+        for (col = 0; col < GRID_WIDTH; col++)
+        {
             board[row][col]->empty = true;
             board[row][col]->linked = false;
             board[row][col]->x = col;
@@ -81,13 +90,15 @@ void init_board() {
     }
 }
 
-void init_game() {
+void init_game()
+{
     init_board();
     current = malloc(sizeof(Piece));
     next = malloc(sizeof(Piece));
     held = malloc(sizeof(Piece));
 
-    if(current == NULL || next == NULL || held == NULL) {
+    if (current == NULL || next == NULL || held == NULL)
+    {
         exit(1);
     }
 }
