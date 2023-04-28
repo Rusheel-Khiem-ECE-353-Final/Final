@@ -7,37 +7,106 @@
 
 #include "music.h"
 
-//TODO: change song to Tetris main theme
 Note_t Song[] =
 {
-    {NOTE_C6,ONE_QUARTER,true},  // Tone, Time, Delay
-    {NOTE_B5,ONE_QUARTER,true},
-    {NOTE_D6,ONE_QUARTER,true},
+    {NOTE_E7,ONE_QUARTER,true},  // Tone, Time, Delay
+    {NOTE_B6,ONE_EIGHTH,true},
+    {NOTE_C7,ONE_EIGHTH,true},
+    {NOTE_D7,ONE_QUARTER,true},
+    {NOTE_C7,ONE_EIGHTH,true},
+    {NOTE_B6,ONE_EIGHTH,true},
+    {NOTE_A6,ONE_QUARTER,true},
+    {NOTE_A6,ONE_EIGHTH,true},
+    {NOTE_C7,ONE_EIGHTH,true},
+    {NOTE_E7,ONE_QUARTER,true},
+    {NOTE_D7,ONE_EIGHTH,true},
+    {NOTE_C7,ONE_EIGHTH,true},
+    {NOTE_B6,THREE_EIGHTH,true},
+    {NOTE_C7,ONE_EIGHTH,true},
+    {NOTE_D7,ONE_QUARTER,true},
+    {NOTE_E7,ONE_QUARTER,true},
+    {NOTE_C7,ONE_QUARTER,true},
+    {NOTE_A6,ONE_QUARTER,true},
+    {NOTE_A6,ONE_QUARTER,true},
+    {0,ONE_QUARTER,true},
+    {0,ONE_EIGHTH,true},
+    {NOTE_D7,ONE_QUARTER,true},
+    {NOTE_F7,ONE_EIGHTH,true},
+    {NOTE_A7,ONE_QUARTER,true},
+    {NOTE_G7,ONE_EIGHTH,true},
+    {NOTE_F7,ONE_EIGHTH,true},
+    {NOTE_E7,THREE_EIGHTH,true},
+    {NOTE_C7,ONE_EIGHTH,true},
+    {NOTE_E7,ONE_QUARTER,true},
+    {NOTE_D7,ONE_EIGHTH,true},
+    {NOTE_C7,ONE_EIGHTH,true},
+    {NOTE_B6,ONE_QUARTER,true},
+    {NOTE_B6,ONE_EIGHTH,true},
+    {NOTE_C7,ONE_EIGHTH,true},
+    {NOTE_D7,ONE_QUARTER,true},
+    {NOTE_E7,ONE_QUARTER,true},
+    {NOTE_C7,ONE_QUARTER,true},
+    {NOTE_A6,ONE_QUARTER,true},
+    {NOTE_A6,ONE_QUARTER,true},
+    {0,ONE_QUARTER,true},
+    {NOTE_E7,ONE_QUARTER,true},
+    {NOTE_B6,ONE_EIGHTH,true},
+    {NOTE_C7,ONE_EIGHTH,true},
+    {NOTE_D7,ONE_QUARTER,true},
+    {NOTE_C7,ONE_EIGHTH,true},
+    {NOTE_B6,ONE_EIGHTH,true},
+    {NOTE_A6,ONE_QUARTER,true},
+    {NOTE_A6,ONE_EIGHTH,true},
+    {NOTE_C7,ONE_EIGHTH,true},
+    {NOTE_E7,ONE_QUARTER,true},
+    {NOTE_D7,ONE_EIGHTH,true},
+    {NOTE_C7,ONE_EIGHTH,true},
+    {NOTE_B6,THREE_EIGHTH,true},
+    {NOTE_C7,ONE_EIGHTH,true},
+    {NOTE_D7,ONE_QUARTER,true},
+    {NOTE_E7,ONE_QUARTER,true},
+    {NOTE_C7,ONE_QUARTER,true},
+    {NOTE_A6,ONE_QUARTER,true},
+    {NOTE_A6,ONE_QUARTER,true},
+    {0,ONE_QUARTER,true},
+    {0,ONE_EIGHTH,true},
+    {NOTE_D7,ONE_QUARTER,true},
+    {NOTE_F7,ONE_EIGHTH,true},
+    {NOTE_A7,ONE_QUARTER,true},
+    {NOTE_G7,ONE_EIGHTH,true},
+    {NOTE_F7,ONE_EIGHTH,true},
+    {NOTE_E7,THREE_EIGHTH,true},
+    {NOTE_C7,ONE_EIGHTH,true},
+    {NOTE_E7,ONE_QUARTER,true},
+    {NOTE_D7,ONE_EIGHTH,true},
+    {NOTE_C7,ONE_EIGHTH,true},
+    {NOTE_B6,ONE_QUARTER,true},
+    {NOTE_B6,ONE_EIGHTH,true},
+    {NOTE_C7,ONE_EIGHTH,true},
+    {NOTE_D7,ONE_QUARTER,true},
+    {NOTE_E7,ONE_QUARTER,true},
+    {NOTE_C7,ONE_QUARTER,true},
+    {NOTE_A6,ONE_QUARTER,true},
+    {NOTE_A6,ONE_QUARTER,true},
+    {0,ONE_QUARTER,true},
+    {NOTE_E6,ONE_HALF,true},
+    {NOTE_C6,ONE_HALF,true},
+    {NOTE_D6,ONE_HALF,true},
+    {NOTE_B5,ONE_HALF,true},
+    {NOTE_C6,ONE_HALF,true},
+    {NOTE_A5,ONE_HALF,true},
+    {NOTE_G5S,ONE_HALF,true},
+    {NOTE_B5,ONE_HALF,true},
+    {NOTE_E6,ONE_HALF,true},
+    {NOTE_C6,ONE_HALF,true},
+    {NOTE_D6,ONE_HALF,true},
+    {NOTE_B5,ONE_HALF,true},
     {NOTE_C6,ONE_QUARTER,true},
-    {NOTE_F6,ONE_QUARTER,true},
     {NOTE_E6,ONE_QUARTER,true},
-    {NOTE_G6,ONE_QUARTER,true},
-    {NOTE_F6,ONE_QUARTER,true},
     {NOTE_A6,ONE_QUARTER,true},
     {NOTE_A6,ONE_QUARTER,true},
-    {NOTE_A6,ONE_QUARTER,true},
-    {NOTE_A6,ONE_QUARTER,true},
-    {NOTE_A6,ONE_HALF,false},
-    {NOTE_A6,ONE_HALF,true},
-    {NOTE_G6,ONE_QUARTER,true},
-    {NOTE_F6S,ONE_QUARTER,true},
-    {NOTE_G6,ONE_QUARTER,true},
-    {NOTE_A6,ONE_QUARTER,true},
-    {NOTE_F6,ONE_QUARTER,true},
-    {NOTE_G6,ONE_QUARTER,true},
-    {NOTE_A6,ONE_QUARTER,true},
-    {NOTE_F6,ONE_QUARTER,true},
-    {NOTE_E6,ONE_QUARTER,true},
-    {NOTE_D6,ONE_QUARTER,true},
-    {NOTE_E6,ONE_QUARTER,true},
-    {NOTE_F6,ONE_QUARTER,true},
-    {NOTE_G6,ONE_HALF,false},
-    {NOTE_G6,ONE_HALF,true}
+    {NOTE_G6S,THREE_QUARTER,true},
+    {0,ONE_QUARTER,true}
 };
 
 
@@ -54,23 +123,29 @@ uint32_t music_get_time_delay(measure_time_t time)
     {
         case ONE_QUARTER:
         {
-            time_return  = time_return / 4;
+            time_return = time_return / 4;
             break;
         }
         case ONE_HALF:
         {
-            time_return  = time_return / 2;
+            time_return = time_return / 2;
             break;
         }
-        case ONE_EIGTH:
-        {
-            time_return  = time_return / 8;
-            break;
-        }
-        case THREE_EIGTH:
+        case THREE_QUARTER:
         {
             time_return = time_return * 3;
-            time_return  = time_return / 8;
+            time_return = time_return / 4;
+            break;
+        }
+        case ONE_EIGHTH:
+        {
+            time_return = time_return / 8;
+            break;
+        }
+        case THREE_EIGHTH:
+        {
+            time_return = time_return * 3;
+            time_return = time_return / 8;
             break;
         }
         default:
@@ -104,20 +179,19 @@ uint32_t music_get_time_delay(measure_time_t time)
 //*************************************************************************
 static void music_play_note(uint16_t note_index)
 {
-    // TODO: change ece353 functions to peripherals functions
     // initialize the buzzer with the note
-    ece353_MKII_Buzzer_Init(Song[note_index].period);
+    peripherals_MKII_Buzzer_Init(Song[note_index].period);
 
     // start playing the note for the correct duration
-    ece353_MKII_Buzzer_On();
-    ece353_T32_1_wait(music_get_time_delay(Song[note_index].time));
+    peripherals_MKII_Buzzer_On();
+    peripherals_T32_1_wait(music_get_time_delay(Song[note_index].time));
 
     // stop playing the note
-    ece353_MKII_Buzzer_Off();
+    peripherals_MKII_Buzzer_Off();
 
     // if delay needed between notes, add it
     if (Song[note_index].delay) {
-        ece353_T32_1_wait(DELAY_AMOUNT);
+        peripherals_T32_1_wait(DELAY_AMOUNT);
     }
 }
 

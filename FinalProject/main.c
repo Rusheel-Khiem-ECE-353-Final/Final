@@ -49,6 +49,9 @@
 #include <FreeRTOS.h>
 #include <task.h>
 
+// Our header files
+#include "music.h"
+
 /*
  *  ======== main ========
  */
@@ -69,7 +72,10 @@ int main(void)
     /* Start the FreeRTOS scheduler */
 //    vTaskStartScheduler();
 //
-//    while(1){};
+    music_play_song();
+    music_play_song();
+
+    while(1){};
     return (0);
 }
 

@@ -53,16 +53,17 @@
 //*****************************************************************************
 // DO NOT MODIFY ANYTHING BELOW
 //*****************************************************************************
-#define MEASURE_DURATION 12000000    // 500 milliseconds
-#define MEASURE_RATIO           2    // 2/4 time
+#define MEASURE_DURATION 10000000    // 416.667 milliseconds
+#define MEASURE_RATIO           4    // 4/4 time
 #define DELAY_AMOUNT       240000    // 10  milliseconds
-#define SONG_NUM_NOTES 28
+#define SONG_NUM_NOTES         98
 
 typedef enum measure_time_t {
     ONE_QUARTER,
     ONE_HALF,
-    ONE_EIGTH,
-    THREE_EIGTH
+    THREE_QUARTER,
+    ONE_EIGHTH,
+    THREE_EIGHTH
 } measure_time_t;
 
 typedef struct{
