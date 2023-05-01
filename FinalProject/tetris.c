@@ -1201,6 +1201,7 @@ void land_current()
         board[y][x].linked = false;
         board[y][x].type = block.type;
     }
+    check_over();
     swap_next();
     held_swapped = false;
     clear_lines();
