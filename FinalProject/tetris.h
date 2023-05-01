@@ -95,6 +95,22 @@ struct Piece
     PieceType type;
 }typedef Piece;
 
+struct GameData
+{
+    Block **board;
+    Piece *current;
+    Piece *next;
+    Piece *held;
+    bool started;
+    bool over;
+    bool held_swapped;
+    int fall_speed;
+    float fall_amount;
+} typedef GameData;
+
+GameData *game;
+
+/*
 Block **board;
 Piece *current;
 Piece *next;
@@ -104,6 +120,7 @@ bool over = false;
 bool held_swapped = false;
 int fall_speed = 10;
 float fall_amount = 0;
+*/
 
 void init_board(void);
 void init_game(void);

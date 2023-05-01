@@ -11,16 +11,16 @@ void init_board()
 {
     int row, col;
 
-    board = malloc(sizeof(Block*) * GRID_HEIGHT);
-    if (board == NULL)
+    (game->board) = malloc(sizeof(Block*) * GRID_HEIGHT);
+    if ((game->board) == NULL)
     {
         exit(1);
     }
 
     for (row = 0; row < GRID_HEIGHT; row++)
     {
-        *(board + row) = malloc(sizeof(Block) * GRID_WIDTH);
-        if ((*(board + row)) == NULL)
+        *((game->board) + row) = malloc(sizeof(Block) * GRID_WIDTH);
+        if ((*((game->board) + row)) == NULL)
         {
             exit(1);
         }
@@ -30,49 +30,60 @@ void init_board()
     {
         for (col = 0; col < GRID_WIDTH; col++)
         {
-            board[row][col].empty = true;
-            board[row][col].linked = false;
-            board[row][col].x = col;
-            board[row][col].y = row;
-            board[row][col].x_offset = 0;
-            board[row][col].y_offset = 0;
-            board[row][col].axis = false;
-            board[row][col].type = EMPTY;
+            (game->board)[row][col].empty = true;
+            (game->board)[row][col].linked = false;
+            (game->board)[row][col].x = col;
+            (game->board)[row][col].y = row;
+            (game->board)[row][col].x_offset = 0;
+            (game->board)[row][col].y_offset = 0;
+            (game->board)[row][col].axis = false;
+            (game->board)[row][col].type = EMPTY;
         }
     }
 }
 
 void init_game()
 {
+    game = malloc(sizeof(GameData));
+    if(game == NULL) {
+        exit(1);
+    }
+
+    game->started = false;
+    game->over = false;
+    game->held_swapped = false;
+    game->fall_speed = 10;
+    game->fall_amount = 0;
+
     init_board();
-    current = malloc(sizeof(Piece));
-    next = malloc(sizeof(Piece));
-    held = malloc(sizeof(Piece));
+    (game->current) = malloc(sizeof(Piece));
+    (game->next) = malloc(sizeof(Piece));
+    (game->held) = malloc(sizeof(Piece));
 
-    if ((current == NULL) || (next == NULL) || (held == NULL))
+    if (((game->current) == NULL) || ((game->next) == NULL) || ((game->held) == NULL))
     {
         exit(1);
     }
 
-    current->blocks = malloc(sizeof(Block) * 4);
-    next->blocks = malloc(sizeof(Block) * 4);
-    held->blocks = malloc(sizeof(Block) * 4);
+    (game->current)->blocks = malloc(sizeof(Block) * 4);
+    (game->next)->blocks = malloc(sizeof(Block) * 4);
+    (game->held)->blocks = malloc(sizeof(Block) * 4);
 
-    if ((current->blocks == NULL) || (next->blocks == NULL)
-            || (held->blocks == NULL))
+    if (((game->current)->blocks == NULL) || ((game->next)->blocks == NULL)
+            || ((game->held)->blocks == NULL))
     {
         exit(1);
     }
 
-    current->x = current->y = -1;
-    next->x = next->y = -1;
-    held->x = held->y = -1;
-    current->rotation = next->rotation = held->rotation = 0;
-    current->rotate = next->rotate = held->rotate = NULL;
-    current->type = next->type = held->type = EMPTY;
-    started = true;
-    over = false;
-    held_swapped = false;
+    (game->current)->x = (game->current)->y = -1;
+    (game->next)->x = (game->next)->y = -1;
+    (game->held)->x = (game->held)->y = -1;
+    (game->current)->rotation = (game->next)->rotation = (game->held)->rotation = 0;
+    (game->current)->rotate = (game->next)->rotate = (game->held)->rotate = NULL;
+    (game->current)->type = (game->next)->type = (game->held)->type = EMPTY;
+    (game->started) = true;
+    (game->over) = false;
+    (game->held_swapped) = false;
 }
 
 void delete_board()
@@ -80,56 +91,56 @@ void delete_board()
     int row;
     for (row = 0; row < GRID_HEIGHT; row++)
     {
-        free(*(board + row));
-        (*(board + row)) = NULL;
+        free(*((game->board) + row));
+        (*((game->board) + row)) = NULL;
     }
 
-    free(board);
-    board = NULL;
+    free((game->board));
+    (game->board) = NULL;
 }
 
 void delete_game()
 {
     delete_board();
 
-    free(current->blocks);
-    current->blocks = NULL;
+    free((game->current)->blocks);
+    (game->current)->blocks = NULL;
 
-    free(next->blocks);
-    next->blocks = NULL;
+    free((game->next)->blocks);
+    (game->next)->blocks = NULL;
 
-    free(held->blocks);
-    held->blocks = NULL;
+    free((game->held)->blocks);
+    (game->held)->blocks = NULL;
 
-    free(current);
-    current = NULL;
+    free((game->current));
+    (game->current) = NULL;
 
-    free(next);
-    next = NULL;
+    free((game->next));
+    (game->next) = NULL;
 
-    free(held);
-    held = NULL;
+    free((game->held));
+    (game->held) = NULL;
 }
 
 void rotate_current_right()
 {
-    if (current != NULL && current->rotate != NULL)
+    if ((game->current) != NULL && (game->current)->rotate != NULL)
     {
-        current->rotate(1);
+        (game->current)->rotate(1);
     }
 }
 
 void rotate_current_left()
 {
-    if (current != NULL && current->rotate != NULL)
+    if ((game->current) != NULL && (game->current)->rotate != NULL)
     {
-        current->rotate(-1);
+        (game->current)->rotate(-1);
     }
 }
 
 void move_current_right()
 {
-    if (current == NULL)
+    if ((game->current) == NULL)
     {
         return;
     }
@@ -138,11 +149,11 @@ void move_current_right()
     bool moveable = true;
     for (block_index = 0; block_index < 4; block_index++)
     {
-        Block block = current->blocks[block_index];
-        int x = (int) (block.x_offset + current->x);
-        int y = (int) (block.y_offset + current->y);
+        Block block = (game->current)->blocks[block_index];
+        int x = (int) (block.x_offset + (game->current)->x);
+        int y = (int) (block.y_offset + (game->current)->y);
 
-        if (((x + 1) > 9) || (board[y][x + 1].empty == false))
+        if (((x + 1) > 9) || ((game->board)[y][x + 1].empty == false))
         {
             moveable = false;
             break;
@@ -151,13 +162,13 @@ void move_current_right()
 
     if (moveable)
     {
-        current->x++;
+        (game->current)->x++;
     }
 }
 
 void move_current_left()
 {
-    if (current == NULL)
+    if ((game->current) == NULL)
     {
         return;
     }
@@ -166,11 +177,11 @@ void move_current_left()
     bool moveable = true;
     for (block_index = 0; block_index < 4; block_index++)
     {
-        Block block = current->blocks[block_index];
-        int x = (int) (block.x_offset + current->x);
-        int y = (int) (block.y_offset + current->y);
+        Block block = (game->current)->blocks[block_index];
+        int x = (int) (block.x_offset + (game->current)->x);
+        int y = (int) (block.y_offset + (game->current)->y);
 
-        if (((x - 1) < 0) || (board[y][x - 1].empty == false))
+        if (((x - 1) < 0) || ((game->board)[y][x - 1].empty == false))
         {
             moveable = false;
             break;
@@ -179,82 +190,82 @@ void move_current_left()
 
     if (moveable)
     {
-        current->x--;
+        (game->current)->x--;
     }
 }
 
 void swap_held()
 {
-    if (held_swapped == false)
+    if ((game->held_swapped) == false)
     {
-        if (held->type == EMPTY)
+        if ((game->held)->type == EMPTY)
         {
-            Piece *temp = held;
-            held = current;
-            current = temp;
+            Piece *temp = (game->held);
+            (game->held) = (game->current);
+            (game->current) = temp;
             swap_next();
         }
         else
         {
-            Piece *temp = held;
-            held = current;
-            current = temp;
+            Piece *temp = (game->held);
+            (game->held) = (game->current);
+            (game->current) = temp;
             spawn_current();
         }
-        held_swapped = true;
+        (game->held_swapped) = true;
     }
 }
 
 void swap_next()
 {
-    if (next->type == EMPTY)
+    if ((game->next)->type == EMPTY)
     {
         generate_next();
     }
 
-    Piece *temp = next;
-    next = current;
-    next->type = EMPTY;
-    next->x = next->y = -1;
-    current = temp;
+    Piece *temp = (game->next);
+    (game->next) = (game->current);
+    (game->next)->type = EMPTY;
+    (game->next)->x = (game->next)->y = -1;
+    (game->current) = temp;
     spawn_current();
     generate_next();
 }
 
 void spawn_current()
 {
-    switch (current->type)
+    switch ((game->current)->type)
     {
     case LINE:
-        current->x = SPAWN_X + 0.5;
-        current->y = SPAWN_Y + 0.5;
+        (game->current)->x = SPAWN_X + 0.5;
+        (game->current)->y = SPAWN_Y + 0.5;
         break;
     case SQUARE:
-        current->x = SPAWN_X + 0.5;
-        current->y = SPAWN_Y + 0.5;
+        (game->current)->x = SPAWN_X + 0.5;
+        (game->current)->y = SPAWN_Y + 0.5;
         break;
     case L:
-        current->x = SPAWN_X;
-        current->y = SPAWN_Y;
+        (game->current)->x = SPAWN_X;
+        (game->current)->y = SPAWN_Y;
         break;
     case J:
-        current->x = SPAWN_X;
-        current->y = SPAWN_Y;
+        (game->current)->x = SPAWN_X;
+        (game->current)->y = SPAWN_Y;
         break;
     case S:
-        current->x = SPAWN_X;
-        current->y = SPAWN_Y;
+        (game->current)->x = SPAWN_X;
+        (game->current)->y = SPAWN_Y;
         break;
     case Z:
-        current->x = SPAWN_X;
-        current->y = SPAWN_Y;
+        (game->current)->x = SPAWN_X;
+        (game->current)->y = SPAWN_Y;
         break;
     case T:
-        current->x = SPAWN_X;
-        current->y = SPAWN_Y;
+        (game->current)->x = SPAWN_X;
+        (game->current)->y = SPAWN_Y;
         break;
     default:
-        current->x = current->y = -1;
+        (game->current)->x = (game->current)->y = -1;
         break;
     }
 }
@@ -262,43 +273,43 @@ void spawn_current()
 void generate_next()
 {
     PieceType type = (PieceType) (rand() % 7 + 1);
-    next->type = type;
-    next->x = -1;
-    next->y = -1;
-    next->rotation = 0;
+    (game->next)->type = type;
+    (game->next)->x = -1;
+    (game->next)->y = -1;
+    (game->next)->rotation = 0;
 
-    switch (next->type)
+    switch ((game->next)->type)
     {
     case LINE:
-        generate_line(next);
-        next->rotate = rotate_line;
+        generate_line((game->next));
+        (game->next)->rotate = rotate_line;
         break;
     case SQUARE:
-        generate_square(next);
-        next->rotate = rotate_square;
+        generate_square((game->next));
+        (game->next)->rotate = rotate_square;
         break;
     case J:
-        generate_J(next);
-        next->rotate = rotate_J;
+        generate_J((game->next));
+        (game->next)->rotate = rotate_J;
         break;
     case L:
-        generate_L(next);
-        next->rotate = rotate_L;
+        generate_L((game->next));
+        (game->next)->rotate = rotate_L;
         break;
     case S:
-        generate_S(next);
-        next->rotate = rotate_S;
+        generate_S((game->next));
+        (game->next)->rotate = rotate_S;
         break;
     case Z:
-        generate_Z(next);
-        next->rotate = rotate_Z;
+        generate_Z((game->next));
+        (game->next)->rotate = rotate_Z;
         break;
     case T:
-        generate_T(next);
-        next->rotate = rotate_T;
+        generate_T((game->next));
+        (game->next)->rotate = rotate_T;
         break;
     default:
-        next->rotate = NULL;
+        (game->next)->rotate = NULL;
         break;
     }
 }
@@ -474,7 +485,7 @@ void rotate_line(int dir)
     int i;
     for (i = 0; i < 4; i++)
     {
-        Block block = current->blocks[i];
+        Block block = (game->current)->blocks[i];
         origins[i][0] = block.x_offset;
         origins[i][1] = block.y_offset;
     }
@@ -483,20 +494,20 @@ void rotate_line(int dir)
     {
         for (i = 0; i < 4; i++)
         {
-            float x = current->blocks[i].x_offset;
-            float y = current->blocks[i].y_offset;
-            current->blocks[i].y_offset = x * -1;
-            current->blocks[i].x_offset = y;
+            float x = (game->current)->blocks[i].x_offset;
+            float y = (game->current)->blocks[i].y_offset;
+            (game->current)->blocks[i].y_offset = x * -1;
+            (game->current)->blocks[i].x_offset = y;
         }
     }
     else
     {
         for (i = 0; i < 4; i++)
         {
-            float x = current->blocks[i].x_offset;
-            float y = current->blocks[i].y_offset;
-            current->blocks[i].y_offset = x;
-            current->blocks[i].x_offset = y * -1;
+            float x = (game->current)->blocks[i].x_offset;
+            float y = (game->current)->blocks[i].y_offset;
+            (game->current)->blocks[i].y_offset = x;
+            (game->current)->blocks[i].x_offset = y * -1;
         }
     }
 
@@ -509,23 +520,23 @@ void rotate_line(int dir)
     {
         if (case_num >= 0)
         {
-            base_x = current->x + cases[d][current->rotation][case_num][0];
-            base_y = current->y + cases[d][current->rotation][case_num][1];
+            base_x = (game->current)->x + cases[d][(game->current)->rotation][case_num][0];
+            base_y = (game->current)->y + cases[d][(game->current)->rotation][case_num][1];
         }
         else
         {
-            base_x = current->x;
-            base_y = current->y;
+            base_x = (game->current)->x;
+            base_y = (game->current)->y;
         }
 
         success = true;
         for (i = 0; i < 4; i++)
         {
-            Block block = current->blocks[i];
+            Block block = (game->current)->blocks[i];
             int x = (int) (block.x_offset + base_x);
             int y = (int) (block.y_offset + base_y);
             if (((x < 0) || (x > 9) || (y < 0) || (y > 19))
-                    || (board[y][x].empty == false))
+                    || ((game->board)[y][x].empty == false))
             {
                 success = false;
             }
@@ -541,27 +552,27 @@ void rotate_line(int dir)
 
     if (case_num >= 0)
     {
-        base_x = current->x + cases[d][current->rotation][case_num][0];
-        base_y = current->y + cases[d][current->rotation][case_num][1];
+        base_x = (game->current)->x + cases[d][(game->current)->rotation][case_num][0];
+        base_y = (game->current)->y + cases[d][(game->current)->rotation][case_num][1];
     }
     else
     {
-        base_x = current->x;
-        base_y = current->y;
+        base_x = (game->current)->x;
+        base_y = (game->current)->y;
     }
 
     if (success == true)
     {
-        current->x += base_x;
-        current->y += base_y;
-        current->rotation = (current->rotation + dir + 4) % 4;
+        (game->current)->x += base_x;
+        (game->current)->y += base_y;
+        (game->current)->rotation = ((game->current)->rotation + dir + 4) % 4;
     }
     else
     {
         for (i = 0; i < 4; i++)
         {
-            current->blocks[i].x_offset = origins[i][0];
-            current->blocks[i].y_offset = origins[i][1];
+            (game->current)->blocks[i].x_offset = origins[i][0];
+            (game->current)->blocks[i].y_offset = origins[i][1];
         }
     }
 }
@@ -592,7 +603,7 @@ void rotate_L(int dir)
     int i;
     for (i = 0; i < 4; i++)
     {
-        Block block = current->blocks[i];
+        Block block = (game->current)->blocks[i];
         origins[i][0] = block.x_offset;
         origins[i][1] = block.y_offset;
     }
@@ -601,20 +612,20 @@ void rotate_L(int dir)
     {
         for (i = 0; i < 4; i++)
         {
-            float x = current->blocks[i].x_offset;
-            float y = current->blocks[i].y_offset;
-            current->blocks[i].y_offset = x * -1;
-            current->blocks[i].x_offset = y;
+            float x = (game->current)->blocks[i].x_offset;
+            float y = (game->current)->blocks[i].y_offset;
+            (game->current)->blocks[i].y_offset = x * -1;
+            (game->current)->blocks[i].x_offset = y;
         }
     }
     else
     {
         for (i = 0; i < 4; i++)
         {
-            float x = current->blocks[i].x_offset;
-            float y = current->blocks[i].y_offset;
-            current->blocks[i].y_offset = x;
-            current->blocks[i].x_offset = y * -1;
+            float x = (game->current)->blocks[i].x_offset;
+            float y = (game->current)->blocks[i].y_offset;
+            (game->current)->blocks[i].y_offset = x;
+            (game->current)->blocks[i].x_offset = y * -1;
         }
     }
 
@@ -627,23 +638,23 @@ void rotate_L(int dir)
     {
         if (case_num >= 0)
         {
-            base_x = current->x + cases[d][current->rotation][case_num][0];
-            base_y = current->y + cases[d][current->rotation][case_num][1];
+            base_x = (game->current)->x + cases[d][(game->current)->rotation][case_num][0];
+            base_y = (game->current)->y + cases[d][(game->current)->rotation][case_num][1];
         }
         else
         {
-            base_x = current->x;
-            base_y = current->y;
+            base_x = (game->current)->x;
+            base_y = (game->current)->y;
         }
 
         success = true;
         for (i = 0; i < 4; i++)
         {
-            Block block = current->blocks[i];
+            Block block = (game->current)->blocks[i];
             int x = (int) (block.x_offset + base_x);
             int y = (int) (block.y_offset + base_y);
             if (((x < 0) || (x > 9) || (y < 0) || (y > 19))
-                    || (board[y][x].empty == false))
+                    || ((game->board)[y][x].empty == false))
             {
                 success = false;
             }
@@ -659,27 +670,27 @@ void rotate_L(int dir)
 
     if (case_num >= 0)
     {
-        base_x = current->x + cases[d][current->rotation][case_num][0];
-        base_y = current->y + cases[d][current->rotation][case_num][1];
+        base_x = (game->current)->x + cases[d][(game->current)->rotation][case_num][0];
+        base_y = (game->current)->y + cases[d][(game->current)->rotation][case_num][1];
     }
     else
     {
-        base_x = current->x;
-        base_y = current->y;
+        base_x = (game->current)->x;
+        base_y = (game->current)->y;
     }
 
     if (success == true)
     {
-        current->x += base_x;
-        current->y += base_y;
-        current->rotation = (current->rotation + dir + 4) % 4;
+        (game->current)->x += base_x;
+        (game->current)->y += base_y;
+        (game->current)->rotation = ((game->current)->rotation + dir + 4) % 4;
     }
     else
     {
         for (i = 0; i < 4; i++)
         {
-            current->blocks[i].x_offset = origins[i][0];
-            current->blocks[i].y_offset = origins[i][1];
+            (game->current)->blocks[i].x_offset = origins[i][0];
+            (game->current)->blocks[i].y_offset = origins[i][1];
         }
     }
 }
@@ -704,7 +715,7 @@ void rotate_J(int dir)
     int i;
     for (i = 0; i < 4; i++)
     {
-        Block block = current->blocks[i];
+        Block block = (game->current)->blocks[i];
         origins[i][0] = block.x_offset;
         origins[i][1] = block.y_offset;
     }
@@ -713,20 +724,20 @@ void rotate_J(int dir)
     {
         for (i = 0; i < 4; i++)
         {
-            float x = current->blocks[i].x_offset;
-            float y = current->blocks[i].y_offset;
-            current->blocks[i].y_offset = x * -1;
-            current->blocks[i].x_offset = y;
+            float x = (game->current)->blocks[i].x_offset;
+            float y = (game->current)->blocks[i].y_offset;
+            (game->current)->blocks[i].y_offset = x * -1;
+            (game->current)->blocks[i].x_offset = y;
         }
     }
     else
     {
         for (i = 0; i < 4; i++)
         {
-            float x = current->blocks[i].x_offset;
-            float y = current->blocks[i].y_offset;
-            current->blocks[i].y_offset = x;
-            current->blocks[i].x_offset = y * -1;
+            float x = (game->current)->blocks[i].x_offset;
+            float y = (game->current)->blocks[i].y_offset;
+            (game->current)->blocks[i].y_offset = x;
+            (game->current)->blocks[i].x_offset = y * -1;
         }
     }
 
@@ -739,23 +750,23 @@ void rotate_J(int dir)
     {
         if (case_num >= 0)
         {
-            base_x = current->x + cases[d][current->rotation][case_num][0];
-            base_y = current->y + cases[d][current->rotation][case_num][1];
+            base_x = (game->current)->x + cases[d][(game->current)->rotation][case_num][0];
+            base_y = (game->current)->y + cases[d][(game->current)->rotation][case_num][1];
         }
         else
         {
-            base_x = current->x;
-            base_y = current->y;
+            base_x = (game->current)->x;
+            base_y = (game->current)->y;
         }
 
         success = true;
         for (i = 0; i < 4; i++)
         {
-            Block block = current->blocks[i];
+            Block block = (game->current)->blocks[i];
             int x = (int) (block.x_offset + base_x);
             int y = (int) (block.y_offset + base_y);
             if (((x < 0) || (x > 9) || (y < 0) || (y > 19))
-                    || (board[y][x].empty == false))
+                    || ((game->board)[y][x].empty == false))
             {
                 success = false;
             }
@@ -771,27 +782,27 @@ void rotate_J(int dir)
 
     if (case_num >= 0)
     {
-        base_x = current->x + cases[d][current->rotation][case_num][0];
-        base_y = current->y + cases[d][current->rotation][case_num][1];
+        base_x = (game->current)->x + cases[d][(game->current)->rotation][case_num][0];
+        base_y = (game->current)->y + cases[d][(game->current)->rotation][case_num][1];
     }
     else
     {
-        base_x = current->x;
-        base_y = current->y;
+        base_x = (game->current)->x;
+        base_y = (game->current)->y;
     }
 
     if (success == true)
     {
-        current->x += base_x;
-        current->y += base_y;
-        current->rotation = (current->rotation + dir + 4) % 4;
+        (game->current)->x += base_x;
+        (game->current)->y += base_y;
+        (game->current)->rotation = ((game->current)->rotation + dir + 4) % 4;
     }
     else
     {
         for (i = 0; i < 4; i++)
         {
-            current->blocks[i].x_offset = origins[i][0];
-            current->blocks[i].y_offset = origins[i][1];
+            (game->current)->blocks[i].x_offset = origins[i][0];
+            (game->current)->blocks[i].y_offset = origins[i][1];
         }
     }
 }
@@ -816,7 +827,7 @@ void rotate_S(int dir)
     int i;
     for (i = 0; i < 4; i++)
     {
-        Block block = current->blocks[i];
+        Block block = (game->current)->blocks[i];
         origins[i][0] = block.x_offset;
         origins[i][1] = block.y_offset;
     }
@@ -825,20 +836,20 @@ void rotate_S(int dir)
     {
         for (i = 0; i < 4; i++)
         {
-            float x = current->blocks[i].x_offset;
-            float y = current->blocks[i].y_offset;
-            current->blocks[i].y_offset = x * -1;
-            current->blocks[i].x_offset = y;
+            float x = (game->current)->blocks[i].x_offset;
+            float y = (game->current)->blocks[i].y_offset;
+            (game->current)->blocks[i].y_offset = x * -1;
+            (game->current)->blocks[i].x_offset = y;
         }
     }
     else
     {
         for (i = 0; i < 4; i++)
         {
-            float x = current->blocks[i].x_offset;
-            float y = current->blocks[i].y_offset;
-            current->blocks[i].y_offset = x;
-            current->blocks[i].x_offset = y * -1;
+            float x = (game->current)->blocks[i].x_offset;
+            float y = (game->current)->blocks[i].y_offset;
+            (game->current)->blocks[i].y_offset = x;
+            (game->current)->blocks[i].x_offset = y * -1;
         }
     }
 
@@ -851,23 +862,23 @@ void rotate_S(int dir)
     {
         if (case_num >= 0)
         {
-            base_x = current->x + cases[d][current->rotation][case_num][0];
-            base_y = current->y + cases[d][current->rotation][case_num][1];
+            base_x = (game->current)->x + cases[d][(game->current)->rotation][case_num][0];
+            base_y = (game->current)->y + cases[d][(game->current)->rotation][case_num][1];
         }
         else
         {
-            base_x = current->x;
-            base_y = current->y;
+            base_x = (game->current)->x;
+            base_y = (game->current)->y;
         }
 
         success = true;
         for (i = 0; i < 4; i++)
         {
-            Block block = current->blocks[i];
+            Block block = (game->current)->blocks[i];
             int x = (int) (block.x_offset + base_x);
             int y = (int) (block.y_offset + base_y);
             if (((x < 0) || (x > 9) || (y < 0) || (y > 19))
-                    || (board[y][x].empty == false))
+                    || ((game->board)[y][x].empty == false))
             {
                 success = false;
             }
@@ -883,27 +894,27 @@ void rotate_S(int dir)
 
     if (case_num >= 0)
     {
-        base_x = current->x + cases[d][current->rotation][case_num][0];
-        base_y = current->y + cases[d][current->rotation][case_num][1];
+        base_x = (game->current)->x + cases[d][(game->current)->rotation][case_num][0];
+        base_y = (game->current)->y + cases[d][(game->current)->rotation][case_num][1];
     }
     else
     {
-        base_x = current->x;
-        base_y = current->y;
+        base_x = (game->current)->x;
+        base_y = (game->current)->y;
     }
 
     if (success == true)
     {
-        current->x += base_x;
-        current->y += base_y;
-        current->rotation = (current->rotation + dir + 4) % 4;
+        (game->current)->x += base_x;
+        (game->current)->y += base_y;
+        (game->current)->rotation = ((game->current)->rotation + dir + 4) % 4;
     }
     else
     {
         for (i = 0; i < 4; i++)
         {
-            current->blocks[i].x_offset = origins[i][0];
-            current->blocks[i].y_offset = origins[i][1];
+            (game->current)->blocks[i].x_offset = origins[i][0];
+            (game->current)->blocks[i].y_offset = origins[i][1];
         }
     }
 }
@@ -928,7 +939,7 @@ void rotate_Z(int dir)
     int i;
     for (i = 0; i < 4; i++)
     {
-        Block block = current->blocks[i];
+        Block block = (game->current)->blocks[i];
         origins[i][0] = block.x_offset;
         origins[i][1] = block.y_offset;
     }
@@ -937,20 +948,20 @@ void rotate_Z(int dir)
     {
         for (i = 0; i < 4; i++)
         {
-            float x = current->blocks[i].x_offset;
-            float y = current->blocks[i].y_offset;
-            current->blocks[i].y_offset = x * -1;
-            current->blocks[i].x_offset = y;
+            float x = (game->current)->blocks[i].x_offset;
+            float y = (game->current)->blocks[i].y_offset;
+            (game->current)->blocks[i].y_offset = x * -1;
+            (game->current)->blocks[i].x_offset = y;
         }
     }
     else
     {
         for (i = 0; i < 4; i++)
         {
-            float x = current->blocks[i].x_offset;
-            float y = current->blocks[i].y_offset;
-            current->blocks[i].y_offset = x;
-            current->blocks[i].x_offset = y * -1;
+            float x = (game->current)->blocks[i].x_offset;
+            float y = (game->current)->blocks[i].y_offset;
+            (game->current)->blocks[i].y_offset = x;
+            (game->current)->blocks[i].x_offset = y * -1;
         }
     }
 
@@ -963,23 +974,23 @@ void rotate_Z(int dir)
     {
         if (case_num >= 0)
         {
-            base_x = current->x + cases[d][current->rotation][case_num][0];
-            base_y = current->y + cases[d][current->rotation][case_num][1];
+            base_x = (game->current)->x + cases[d][(game->current)->rotation][case_num][0];
+            base_y = (game->current)->y + cases[d][(game->current)->rotation][case_num][1];
         }
         else
         {
-            base_x = current->x;
-            base_y = current->y;
+            base_x = (game->current)->x;
+            base_y = (game->current)->y;
         }
 
         success = true;
         for (i = 0; i < 4; i++)
         {
-            Block block = current->blocks[i];
+            Block block = (game->current)->blocks[i];
             int x = (int) (block.x_offset + base_x);
             int y = (int) (block.y_offset + base_y);
             if (((x < 0) || (x > 9) || (y < 0) || (y > 19))
-                    || (board[y][x].empty == false))
+                    || ((game->board)[y][x].empty == false))
             {
                 success = false;
             }
@@ -995,27 +1006,27 @@ void rotate_Z(int dir)
 
     if (case_num >= 0)
     {
-        base_x = current->x + cases[d][current->rotation][case_num][0];
-        base_y = current->y + cases[d][current->rotation][case_num][1];
+        base_x = (game->current)->x + cases[d][(game->current)->rotation][case_num][0];
+        base_y = (game->current)->y + cases[d][(game->current)->rotation][case_num][1];
     }
     else
     {
-        base_x = current->x;
-        base_y = current->y;
+        base_x = (game->current)->x;
+        base_y = (game->current)->y;
     }
 
     if (success == true)
     {
-        current->x += base_x;
-        current->y += base_y;
-        current->rotation = (current->rotation + dir + 4) % 4;
+        (game->current)->x += base_x;
+        (game->current)->y += base_y;
+        (game->current)->rotation = ((game->current)->rotation + dir + 4) % 4;
     }
     else
     {
         for (i = 0; i < 4; i++)
         {
-            current->blocks[i].x_offset = origins[i][0];
-            current->blocks[i].y_offset = origins[i][1];
+            (game->current)->blocks[i].x_offset = origins[i][0];
+            (game->current)->blocks[i].y_offset = origins[i][1];
         }
     }
 }
@@ -1043,7 +1054,7 @@ void rotate_T(int dir)
     int i;
     for (i = 0; i < 4; i++)
     {
-        Block block = current->blocks[i];
+        Block block = (game->current)->blocks[i];
         origins[i][0] = block.x_offset;
         origins[i][1] = block.y_offset;
     }
@@ -1052,20 +1063,20 @@ void rotate_T(int dir)
     {
         for (i = 0; i < 4; i++)
         {
-            float x = current->blocks[i].x_offset;
-            float y = current->blocks[i].y_offset;
-            current->blocks[i].y_offset = x * -1;
-            current->blocks[i].x_offset = y;
+            float x = (game->current)->blocks[i].x_offset;
+            float y = (game->current)->blocks[i].y_offset;
+            (game->current)->blocks[i].y_offset = x * -1;
+            (game->current)->blocks[i].x_offset = y;
         }
     }
     else
     {
         for (i = 0; i < 4; i++)
         {
-            float x = current->blocks[i].x_offset;
-            float y = current->blocks[i].y_offset;
-            current->blocks[i].y_offset = x;
-            current->blocks[i].x_offset = y * -1;
+            float x = (game->current)->blocks[i].x_offset;
+            float y = (game->current)->blocks[i].y_offset;
+            (game->current)->blocks[i].y_offset = x;
+            (game->current)->blocks[i].x_offset = y * -1;
         }
     }
 
@@ -1078,23 +1089,23 @@ void rotate_T(int dir)
     {
         if (case_num >= 0)
         {
-            base_x = current->x + cases[d][current->rotation][case_num][0];
-            base_y = current->y + cases[d][current->rotation][case_num][1];
+            base_x = (game->current)->x + cases[d][(game->current)->rotation][case_num][0];
+            base_y = (game->current)->y + cases[d][(game->current)->rotation][case_num][1];
         }
         else
         {
-            base_x = current->x;
-            base_y = current->y;
+            base_x = (game->current)->x;
+            base_y = (game->current)->y;
         }
 
         success = true;
         for (i = 0; i < 4; i++)
         {
-            Block block = current->blocks[i];
+            Block block = (game->current)->blocks[i];
             int x = (int) (block.x_offset + base_x);
             int y = (int) (block.y_offset + base_y);
             if (((x < 0) || (x > 9) || (y < 0) || (y > 19))
-                    || (board[y][x].empty == false))
+                    || ((game->board)[y][x].empty == false))
             {
                 success = false;
             }
@@ -1110,32 +1121,32 @@ void rotate_T(int dir)
 
     if (case_num >= 0)
     {
-        base_x = current->x + cases[d][current->rotation][case_num][0];
-        base_y = current->y + cases[d][current->rotation][case_num][1];
+        base_x = (game->current)->x + cases[d][(game->current)->rotation][case_num][0];
+        base_y = (game->current)->y + cases[d][(game->current)->rotation][case_num][1];
     }
     else
     {
-        base_x = current->x;
-        base_y = current->y;
+        base_x = (game->current)->x;
+        base_y = (game->current)->y;
     }
 
     if (success == true)
     {
-        current->x += base_x;
-        current->y += base_y;
-        current->rotation = (current->rotation + dir + 4) % 4;
+        (game->current)->x += base_x;
+        (game->current)->y += base_y;
+        (game->current)->rotation = ((game->current)->rotation + dir + 4) % 4;
     }
     else
     {
         for (i = 0; i < 4; i++)
         {
-            current->blocks[i].x_offset = origins[i][0];
-            current->blocks[i].y_offset = origins[i][1];
+            (game->current)->blocks[i].x_offset = origins[i][0];
+            (game->current)->blocks[i].y_offset = origins[i][1];
         }
     }
 }
 
-void clear_lines(void)
+void clear_lines()
 {
     int row = 0;
     while (row < GRID_HEIGHT)
@@ -1144,7 +1155,7 @@ void clear_lines(void)
         int column;
         for (column = 0; column < GRID_WIDTH; column++)
         {
-            Block block = board[row][column];
+            Block block = (game->board)[row][column];
             if (block.empty == true)
             {
                 row++;
@@ -1154,24 +1165,24 @@ void clear_lines(void)
         }
         if (full)
         {
-            Block *temp = board[row];
+            Block *temp = (game->board)[row];
             int i;
             for (i = 0; i < GRID_WIDTH; i++)
             {
-                board[row][i].empty = true;
+                (game->board)[row][i].empty = true;
             }
 
             for (i = row + 1; i < GRID_HEIGHT; i++)
             {
-                board[i - 1] = board[i];
+                (game->board)[i - 1] = (game->board)[i];
             }
 
-            board[GRID_HEIGHT - 1] = temp;
+            (game->board)[GRID_HEIGHT - 1] = temp;
         }
     }
 }
 
-void check_over(void)
+void check_over()
 {
     int row;
     for (row = SPAWN_Y; row < GRID_HEIGHT; row++)
@@ -1179,9 +1190,9 @@ void check_over(void)
         int col;
         for (col = 0; col < GRID_WIDTH; col++)
         {
-            if (board[row][col].empty == false)
+            if ((game->board)[row][col].empty == false)
             {
-                over = true;
+                (game->over) = true;
                 break;
             }
         }
@@ -1193,23 +1204,23 @@ void land_current()
     int block_index;
     for (block_index = 0; block_index < 4; block_index++)
     {
-        Block block = current->blocks[block_index];
-        int x = (int) (block.x_offset + current->x);
-        int y = (int) (block.y_offset + current->y);
+        Block block = (game->current)->blocks[block_index];
+        int x = (int) (block.x_offset + (game->current)->x);
+        int y = (int) (block.y_offset + (game->current)->y);
 
-        board[y][x].empty = false;
-        board[y][x].linked = false;
-        board[y][x].type = block.type;
+        (game->board)[y][x].empty = false;
+        (game->board)[y][x].linked = false;
+        (game->board)[y][x].type = block.type;
     }
     check_over();
     swap_next();
-    held_swapped = false;
+    (game->held_swapped) = false;
     clear_lines();
 }
 
 void hard_drop()
 {
-    if ((started == false) || (over == true))
+    if (((game->started) == false) || ((game->over) == true))
     {
         return;
     }
@@ -1221,11 +1232,11 @@ void hard_drop()
         bool moveable = true;
         for (block_index = 0; block_index < 4; block_index++)
         {
-            Block block = current->blocks[block_index];
-            int x = (int) (block.x_offset + current->x);
-            int y = (int) (block.y_offset + current->y);
+            Block block = (game->current)->blocks[block_index];
+            int x = (int) (block.x_offset + (game->current)->x);
+            int y = (int) (block.y_offset + (game->current)->y);
 
-            if (((y - 1) < 0) || (board[y - 1][x].empty == false))
+            if (((y - 1) < 0) || ((game->board)[y - 1][x].empty == false))
             {
                 land_current();
                 check_over();
@@ -1237,7 +1248,7 @@ void hard_drop()
 
         if (moveable)
         {
-            current->y--;
+            (game->current)->y--;
         }
 
     }
@@ -1245,37 +1256,37 @@ void hard_drop()
 
 void enable_fast_fall()
 {
-    fall_speed *= 2;
+    (game->fall_speed) *= 2;
 }
 
 void disable_fast_fall()
 {
-    fall_speed /= 2;
+    (game->fall_speed) /= 2;
 }
 
-void run_cycle(void)
+void run_cycle()
 {
-    if ((started == false) || (over == true))
+    if (((game->started) == false) || ((game->over) == true))
     {
         return;
     }
 
-    fall_amount += (1 / ((float) UPDATE_FREQUENCY)) * (float) fall_speed;
-    if (fall_amount < 1)
+    (game->fall_amount) += (1 / ((float) UPDATE_FREQUENCY)) * (float) (game->fall_speed);
+    if ((game->fall_amount) < 1)
     {
         return;
     }
-    fall_amount = 0;
+    (game->fall_amount)--;
 
     int block_index;
     bool moveable = true;
     for (block_index = 0; block_index < 4; block_index++)
     {
-        Block block = current->blocks[block_index];
-        int x = (int) (block.x_offset + current->x);
-        int y = (int) (block.y_offset + current->y);
+        Block block = (game->current)->blocks[block_index];
+        int x = (int) (block.x_offset + (game->current)->x);
+        int y = (int) (block.y_offset + (game->current)->y);
 
-        if (((y - 1) < 0) || (board[y - 1][x].empty == false))
+        if (((y - 1) < 0) || ((game->board)[y - 1][x].empty == false))
         {
             land_current();
             check_over();
@@ -1286,6 +1297,6 @@ void run_cycle(void)
 
     if (moveable)
     {
-        current->y--;
+        (game->current)->y--;
     }
 }
