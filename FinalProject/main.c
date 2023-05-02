@@ -68,6 +68,10 @@ int main(void)
     configMINIMAL_STACK_SIZE,
                 NULL, 1, &Task_Music_Buzzer_Handle);
 
+    xTaskCreate(task_light_sensor, "Light Sensor Task",
+    configMINIMAL_STACK_SIZE,
+                NULL, 1, &Task_Light_Sensor_Handle);
+
     xTaskCreate(task_cycle_game, "Cycle Game Task",
     configMINIMAL_STACK_SIZE,
                 NULL, 1, &Task_Cycle_Game_Handle);

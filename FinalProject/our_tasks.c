@@ -12,6 +12,7 @@
 #include "tetris.h"
 
 TaskHandle_t Task_Music_Buzzer_Handle = NULL;
+TaskHandle_t Task_Light_Sensor_Handle = NULL;
 TaskHandle_t Task_Screen_LCD_Handle = NULL;
 TaskHandle_t Task_Cycle_Game_Handle = NULL;
 TaskHandle_t Task_ADC_Handle = NULL;
@@ -21,16 +22,45 @@ TaskHandle_t Task_MKII_S2_Handle = NULL;
 QueueHandle_t Queue_Peripherals;
 QueueHandle_t Queue_Game;
 
-void task_ADC_bottom_half(void *pvParameters) {}
-void task_ADC_timer(void *pvParameters) {}
-void task_MKII_S1(void *pvParameters) {}
-void task_MKII_S2(void *pvParameters) {}
+bool light_mode = false;
+float light_mode_threshold = 350.0;
+
+void task_ADC_bottom_half(void *pvParameters)
+{
+}
+void task_ADC_timer(void *pvParameters)
+{
+}
+void task_MKII_S1(void *pvParameters)
+{
+}
+void task_MKII_S2(void *pvParameters)
+{
+}
 
 void task_music_buzzer(void *pvParameters)
 {
     while (1)
     {
         music_play_song();
+    }
+}
+
+void task_light_sensor(void *pvParameters)
+{
+    float lux;
+    while (1)
+    {
+        lux = opt3001_read_lux();
+
+        if (lux >= light_mode_threshold)
+        {
+            light_mode = true;
+        }
+        else
+        {
+            light_mode = false;
+        }
     }
 }
 

@@ -18,6 +18,7 @@
 #include <queue.h>
 
 extern TaskHandle_t Task_Music_Buzzer_Handle;
+extern TaskHandle_t Task_Light_Sensor_Handle;
 extern TaskHandle_t Task_Screen_LCD_Handle;
 extern TaskHandle_t Task_Cycle_Game_Handle;
 extern TaskHandle_t Task_ADC_Handle;
@@ -28,6 +29,7 @@ extern QueueHandle_t Queue_Game;
 extern QueueHandle_t Queue_Peripherals;
 
 void task_music_buzzer(void *pvParameters);
+void task_light_sensor(void *pvParameters);
 void task_screen_LCD(void *pvParameters);
 void task_ADC_bottom_half(void *pvParameters);
 void task_ADC_timer(void *pvParameters);
