@@ -6,6 +6,7 @@
  */
 
 #include "peripherals.h"
+#include "math.h"
 
 /*
  * Busy waits for a given number of SMCLK clock cycles
@@ -108,5 +109,70 @@ void peripherals_MKII_Buzzer_Off(void)
 }
 
 
+// OPT3001 Ambient Light Sensor Code
+
+/******************************************************************************
+ * Initialize the opt3001 ambient light sensor on the MKII.  This function assumes
+ * that the I2C interface has already been configured to operate at 100KHz.
+ ******************************************************************************/
+
+void opt3001_init(void)
+{
+    // Initialize OPT3001
+    /* ADD CODE */
+    //interrupt:    J1.8 --> P4.6
+    //SCL:          J1.9 --> P6.5
+    //SDA:          J1.10 -> P6.4
+    //0b1100010000010000 = 0xC410
+    i2c_write_16(OPT3001_SLAVE_ADDRESS, CONFIG_REG, 0xC410);
+}
+
+
+/******************************************************************************
+ * Returns the current ambient light in lux
+ *  ******************************************************************************/
+float opt3001_read_lux(void)
+{
+    // Read the Result register of OPT3001 and convert into Lux, then return.
+    uint16_t result = i2c_read_16(OPT3001_SLAVE_ADDRESS, RESULT_REG);
+    float lux = 0.01 * pow(2, (result >> 12)) * (result & 0x0FFF);
+
+    return lux; // Need to modify
+
+}
+
+/******************************************************************************
+ * Changes the LCD screen's colors based on the lux
+ *******************************************************************************/
+void display_lux(float light)
+{
+    //TODO: change colors of screen (invert colors maybe?)
+    if(light < 200.0)
+    {
+//        ece353_MKII_RGB_LED(false, false, true); // turn on BLUE
+    }
+    else if (light < 500.0)
+    {
+//        ece353_MKII_RGB_LED(false, true, false); // turn on GREEN
+    }
+    else
+    {
+//        ece353_MKII_RGB_LED(true, false, false); // turn on RED
+    }
+
+    // example code to run in main (probably put in task)
+//    float lux = 0.0;
+//
+//        WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;     // stop watchdog timer
+//
+//        ece353_MKII_RGB_IO_Init(false);
+//        i2c_init();
+//        opt3001_init();
+//
+//        while(1){
+//            lux = opt3001_read_lux();
+//            display_lux(lux);
+//        }
+}
 
 
