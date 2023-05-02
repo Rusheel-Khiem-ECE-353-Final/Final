@@ -57,8 +57,6 @@ struct GameData
     float fall_amount;
 }typedef GameData;
 
-extern GameData *game;
-
 void init_board(void);
 void init_game(void);
 void delete_board(void);
@@ -99,4 +97,5 @@ void disable_fast_fall(void);
 
 void run_cycle(void);
 
+void task_cycle_game(void *pvParameters);
 #endif /* TETRIS_H_ */

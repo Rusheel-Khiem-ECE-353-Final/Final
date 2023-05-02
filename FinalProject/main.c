@@ -53,6 +53,7 @@
 #include "music.h"
 #include "our_tasks.h"
 #include "peripherals.h"
+#include "tetris.h"
 
 /*
  *  ======== main ========
@@ -61,8 +62,10 @@ int main(void)
 {
     WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;     // stop watchdog timer
 
+    Queue_Game = xQueueCreate(1, sizeof(GameData));
+
     xTaskCreate
-    (   Task_Music_Buzzer,
+    (   task_music_buzzer,
         "Buzzer Music Task",
         configMINIMAL_STACK_SIZE,
         NULL,
@@ -71,13 +74,22 @@ int main(void)
     );
 
     xTaskCreate
-    (   Task_Screen_LCD,
+    (   task_screen_LCD,
         "LCD Screen Task",
         configMINIMAL_STACK_SIZE,
         NULL,
         1,
         &Task_Screen_LCD_Handle
     );
+
+    xTaskCreate
+        (   task_cycle_game,
+            "LCD Screen Task",
+            configMINIMAL_STACK_SIZE,
+            NULL,
+            1,
+            &Task_Cycle_Game_Handle
+        );
 
 
 

@@ -13,6 +13,7 @@
 
 TaskHandle_t Task_Music_Buzzer_Handle = NULL;
 TaskHandle_t Task_Screen_LCD_Handle = NULL;
+QueueHandle_t Queue_Game;
 
 void task_music_buzzer(void *pvParameters)
 {
@@ -26,6 +27,9 @@ void task_screen_LCD(void *pvParameters)
 {
     while (1)
     {
+        GameData* game;
+        xQueueReceive(Queue_Game, &game, portMAX_DELAY);
+
         if (LCD_UPDATEABLE)
         {
             int lcd_row = 0;
@@ -42,8 +46,8 @@ void task_screen_LCD(void *pvParameters)
                 for (lcd_col = 0; lcd_col < 10; lcd_col++)
                 { // width
 
-                    game_row = 19 - i;
-                    game_col = j;
+                    game_row = 19 - lcd_row;
+                    game_col = lcd_col;
 
                     draw_row = (lcd_row * 6) + 3;
                     draw_col = (lcd_col * 6) + 3;

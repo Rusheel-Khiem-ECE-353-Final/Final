@@ -6,6 +6,9 @@
  */
 
 #include "tetris.h"
+#include "our_tasks.h"
+
+GameData *game;
 
 /******************************************************************************
  * Initialize the Tetris game board by allocating all required memory and
@@ -1439,5 +1442,14 @@ void run_cycle()
     if (moveable)
     {
         (game->current)->y--;
+    }
+}
+
+void task_cycle_game(void *pvParameters)
+{
+    while(1)
+    {
+        run_cycle();
+        xQueueSendToBack(Queue_Game, &game, portMAX_DELAY);
     }
 }
