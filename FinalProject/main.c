@@ -64,34 +64,33 @@ int main(void)
 
     Queue_Game = xQueueCreate(1, sizeof(GameData));
 
-    xTaskCreate
-    (   task_music_buzzer,
-        "Buzzer Music Task",
-        configMINIMAL_STACK_SIZE,
-        NULL,
-        1,
-        &Task_Music_Buzzer_Handle
-    );
+    xTaskCreate(task_music_buzzer, "Buzzer Music Task",
+    configMINIMAL_STACK_SIZE,
+                NULL, 1, &Task_Music_Buzzer_Handle);
 
-    xTaskCreate
-    (   task_screen_LCD,
-        "LCD Screen Task",
-        configMINIMAL_STACK_SIZE,
-        NULL,
-        1,
-        &Task_Screen_LCD_Handle
-    );
+    xTaskCreate(task_cycle_game, "Cycle Game Task",
+    configMINIMAL_STACK_SIZE,
+                NULL, 1, &Task_Cycle_Game_Handle);
 
-    xTaskCreate
-        (   task_cycle_game,
-            "LCD Screen Task",
-            configMINIMAL_STACK_SIZE,
-            NULL,
-            1,
-            &Task_Cycle_Game_Handle
-        );
+    xTaskCreate(task_screen_LCD, "LCD Screen Task",
+    configMINIMAL_STACK_SIZE,
+                NULL, 1, &Task_Screen_LCD_Handle);
 
+    xTaskCreate(task_ADC_timer, "ADC Timer Task",
+    configMINIMAL_STACK_SIZE,
+                NULL, 1, &Task_ADC_Timer_Handle);
 
+    xTaskCreate(task_ADC_bottom_half, "ADC Bottom Half Task",
+    configMINIMAL_STACK_SIZE,
+                NULL, 1, &Task_ADC_Handle);
+
+    xTaskCreate(task_MKII_S1, "MKII S1 Task",
+    configMINIMAL_STACK_SIZE,
+                NULL, 1, &Task_MKII_S1_Handle);
+
+    xTaskCreate(task_MKII_S2, "MKII S2 Task",
+    configMINIMAL_STACK_SIZE,
+                NULL, 1, &Task_MKII_S2_Handle);
 
     /* Start the FreeRTOS scheduler */
     vTaskStartScheduler();
@@ -99,7 +98,9 @@ int main(void)
 //    music_play_song();
 //    music_play_song();
 
-    while(1){};
+    while (1)
+    {
+    };
     return (0);
 }
 
@@ -115,7 +116,7 @@ int main(void)
 void vApplicationMallocFailedHook()
 {
     /* Handle Memory Allocation Errors */
-    while(1)
+    while (1)
     {
     }
 }
@@ -132,7 +133,7 @@ void vApplicationMallocFailedHook()
 void vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName)
 {
     //Handle FreeRTOS Stack Overflow
-    while(1)
+    while (1)
     {
     }
 }

@@ -1451,5 +1451,7 @@ void task_cycle_game(void *pvParameters)
     {
         run_cycle();
         xQueueSendToBack(Queue_Game, &game, portMAX_DELAY);
+
+        vTaskDelay(pdMS_TO_TICKS(100));
     }
 }
