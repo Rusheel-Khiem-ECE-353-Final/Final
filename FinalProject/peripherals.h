@@ -14,6 +14,33 @@
 #include <msp.h>        // access to MSP device stuff
 #include "i2c.h"        // use I2C to communicate with OPT3001
 
+// OPT3001 ambient light sensor code
+#define OPT3001_SLAVE_ADDRESS 0x44
+
+#define OPT_INTERRUPT_PIN 11
+#define RESULT_REG 0x00
+#define CONFIG_REG 0x01
+#define LOWLIMIT_REG 0x02
+#define HIGHLIMIT_REG 0x03
+#define MANUFACTUREID_REG 0x7E
+#define DEVICEID_REG 0x7F
+
+/******************************************************************************
+ * Initialize the opt3001 ambient light sensor on the MKII.  This function assumes
+ * that the I2C interface has already been configured to operate at 100KHz.
+ ******************************************************************************/
+void opt3001_init(void);
+
+/******************************************************************************
+ * Returns the current ambient light in lux
+ ******************************************************************************/
+float opt3001_read_lux(void);
+
+/******************************************************************************
+ * Changes the LCD screen's colors based on the lux
+ *******************************************************************************/
+void display_lux(float light);
+
 /*
  * Busy waits for a given number of SMCLK clock cycles
  *
@@ -60,33 +87,5 @@ void peripherals_MKII_Buzzer_Off(void);
 
 void ADC14_PS2_XY(void);
 void ADC14_ACCEL_XY(void);
-
-
-// OPT3001 ambient light sensor code
-#define OPT3001_SLAVE_ADDRESS 0x44
-
-#define OPT_INTERRUPT_PIN 11
-#define RESULT_REG 0x00
-#define CONFIG_REG 0x01
-#define LOWLIMIT_REG 0x02
-#define HIGHLIMIT_REG 0x03
-#define MANUFACTUREID_REG 0x7E
-#define DEVICEID_REG 0x7F
-
-/******************************************************************************
- * Initialize the opt3001 ambient light sensor on the MKII.  This function assumes
- * that the I2C interface has already been configured to operate at 100KHz.
- ******************************************************************************/
-void opt3001_init(void);
-
-/******************************************************************************
- * Returns the current ambient light in lux
- ******************************************************************************/
-float opt3001_read_lux(void);
-
-/******************************************************************************
- * Changes the LCD screen's colors based on the lux
- *******************************************************************************/
-void display_lux(float light);
 
 #endif /* PERIPHERALS_H_ */
