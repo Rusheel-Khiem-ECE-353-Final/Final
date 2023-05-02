@@ -1,8 +1,8 @@
 /*
  * lcd.h
  *
- *  Created on: Sep 11, 2020
- *      Author: Joe Krachey
+ *  Created on: Apr 27, 2023
+ *     Authors: Joe Krachey, Rusheel Dasari, and Khiem Vu
  */
 #include "msp.h"
 
@@ -73,6 +73,24 @@
 #define CM_MADCTL_MH       0x04
 
 #define HAL_LCD_delay(x)      __delay_cycles(x * 48)
+
+// Colors
+#define LCD_COLOR_WHITE         0xFFFF
+#define LCD_COLOR_BLACK         0x0000
+#define LCD_COLOR_RED           0xF800
+#define LCD_COLOR_GREEN         0x07E0
+#define LCD_COLOR_GREEN2        0xB723
+#define LCD_COLOR_BLUE          0x001F
+#define LCD_COLOR_BLUE2         0x051D
+#define LCD_COLOR_YELLOW        0xFFE0
+#define LCD_COLOR_ORANGE        0xFBE4
+#define LCD_COLOR_CYAN          0x07FF
+#define LCD_COLOR_MAGENTA       0xA254
+#define LCD_COLOR_GRAY          0x7BEF
+#define LCD_COLOR_BROWN         0xBBCA
+
+// size of one tetris block
+#define BLOCK_SIZE          6
 
 extern void Crystalfontz128x128_Init(void);
 
