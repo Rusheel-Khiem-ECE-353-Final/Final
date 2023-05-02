@@ -51,6 +51,8 @@
 
 // Our header files
 #include "music.h"
+#include "our_tasks.h"
+#include "peripherals.h"
 
 /*
  *  ======== main ========
@@ -59,21 +61,31 @@ int main(void)
 {
     WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;     // stop watchdog timer
 
-//    xTaskCreate
-//    (   Task_Blink_LED1,
-//        "LED1 Blink Task",
-//        configMINIMAL_STACK_SIZE,
-//        NULL,
-//        1,
-//        &Task_Blink_LED1_Handle
-//    );
+    xTaskCreate
+    (   Task_Music_Buzzer,
+        "Buzzer Music Task",
+        configMINIMAL_STACK_SIZE,
+        NULL,
+        1,
+        &Task_Music_Buzzer_Handle
+    );
+
+    xTaskCreate
+    (   Task_Screen_LCD,
+        "LCD Screen Task",
+        configMINIMAL_STACK_SIZE,
+        NULL,
+        1,
+        &Task_Screen_LCD_Handle
+    );
+
 
 
     /* Start the FreeRTOS scheduler */
-//    vTaskStartScheduler();
-//
-    music_play_song();
-    music_play_song();
+    vTaskStartScheduler();
+
+//    music_play_song();
+//    music_play_song();
 
     while(1){};
     return (0);

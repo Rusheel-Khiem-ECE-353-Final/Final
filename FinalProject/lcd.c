@@ -1,8 +1,8 @@
 /*
  * lcd.c
  *
- *  Created on: Sep 11, 2020
- *      Author: Joe Krachey
+ *  Created on: Apr 27, 2023
+ *      Author: Joe Krachey, Rusheel Dasari, and Khiem Vu
  */
 
 #include "lcd.h"
