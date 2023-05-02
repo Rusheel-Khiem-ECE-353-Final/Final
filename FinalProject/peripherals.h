@@ -8,7 +8,10 @@
 #ifndef PERIPHERALS_H_
 #define PERIPHERALS_H_
 
+#include "msp.h"
 
+void ADC14_PS2_XY(void);
+void ADC14_ACCEL_XY(void);
 
 
 

@@ -15,7 +15,7 @@
 #define GRID_HEIGHT         20
 #define SPAWN_X             4
 #define SPAWN_Y             18
-#define UPDATE_FREQUENCY    20
+#define UPDATE_FREQUENCY    10
 
 enum PieceType
 {
