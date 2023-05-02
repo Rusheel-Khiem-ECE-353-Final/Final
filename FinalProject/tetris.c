@@ -7,6 +7,10 @@
 
 #include "tetris.h"
 
+/******************************************************************************
+ * Initialize the Tetris game board by allocating all required memory and
+ * setting all of the initial values of the blocks in the board
+ ******************************************************************************/
 void init_board()
 {
     int row, col;
@@ -26,6 +30,7 @@ void init_board()
         }
     }
 
+    // Set all the blocks in the board to be empty at their location
     for (row = 0; row < GRID_HEIGHT; row++)
     {
         for (col = 0; col < GRID_WIDTH; col++)
@@ -42,6 +47,10 @@ void init_board()
     }
 }
 
+/******************************************************************************
+ * Initializes the game by allocating all required memory for the game and any
+ * global pieces or values needed for the game to function
+ ******************************************************************************/
 void init_game()
 {
     game = malloc(sizeof(GameData));
@@ -90,6 +99,9 @@ void init_game()
     (game->held_swapped) = false;
 }
 
+/******************************************************************************
+ * Frees all memory used for the board
+ ******************************************************************************/
 void delete_board()
 {
     int row;
@@ -103,6 +115,9 @@ void delete_board()
     (game->board) = NULL;
 }
 
+/******************************************************************************
+ * Frees all memory used for the game
+ ******************************************************************************/
 void delete_game()
 {
     delete_board();
@@ -129,6 +144,9 @@ void delete_game()
     game = NULL;
 }
 
+/******************************************************************************
+ * If possible, rotates the current piece clockwise
+ ******************************************************************************/
 void rotate_current_right()
 {
     if ((game->current) != NULL && (game->current)->rotate != NULL)
@@ -137,6 +155,9 @@ void rotate_current_right()
     }
 }
 
+/******************************************************************************
+ * If possible, rotates the current piece counterclockwise
+ ******************************************************************************/
 void rotate_current_left()
 {
     if ((game->current) != NULL && (game->current)->rotate != NULL)
@@ -145,6 +166,9 @@ void rotate_current_left()
     }
 }
 
+/******************************************************************************
+ * If possible, moves the current piece one position to the right
+ ******************************************************************************/
 void move_current_right()
 {
     if ((game->current) == NULL)
@@ -173,6 +197,9 @@ void move_current_right()
     }
 }
 
+/******************************************************************************
+ * If possible, moves the current piece one position to the left
+ ******************************************************************************/
 void move_current_left()
 {
     if ((game->current) == NULL)
@@ -201,6 +228,9 @@ void move_current_left()
     }
 }
 
+/******************************************************************************
+ * If allowed, swaps the currently held piece with the current piece
+ ******************************************************************************/
 void swap_held()
 {
     if ((game->held_swapped) == false)
@@ -223,6 +253,9 @@ void swap_held()
     }
 }
 
+/******************************************************************************
+ * Swaps the current piece with the next piece and generates a new next piece
+ ******************************************************************************/
 void swap_next()
 {
     if ((game->next)->type == EMPTY)
@@ -239,6 +272,9 @@ void swap_next()
     generate_next();
 }
 
+/******************************************************************************
+ * Spawns the current piece at the top of the board
+ ******************************************************************************/
 void spawn_current()
 {
     switch ((game->current)->type)
@@ -277,6 +313,9 @@ void spawn_current()
     }
 }
 
+/******************************************************************************
+ * Randomly generates a new next piece
+ ******************************************************************************/
 void generate_next()
 {
     PieceType type = (PieceType) (rand() % 7 + 1);
@@ -321,6 +360,9 @@ void generate_next()
     }
 }
 
+/******************************************************************************
+ * The base method to generate a new piece
+ ******************************************************************************/
 void generate_block_base(Piece *piece)
 {
     piece->blocks[0].axis = piece->blocks[1].axis = piece->blocks[2].axis =
@@ -337,6 +379,9 @@ void generate_block_base(Piece *piece)
             piece->blocks[3].y = 0;
 }
 
+/******************************************************************************
+ * Specifies the generation of a line piece
+ ******************************************************************************/
 void generate_line(Piece *piece)
 {
     piece->rotate = rotate_line;
@@ -355,6 +400,9 @@ void generate_line(Piece *piece)
     piece->blocks[3].y_offset = 0.5;
 }
 
+/******************************************************************************
+ * Specifies the generation of a square piece
+ ******************************************************************************/
 void generate_square(Piece *piece)
 {
     piece->rotate = rotate_square;
@@ -373,6 +421,9 @@ void generate_square(Piece *piece)
     piece->blocks[3].y_offset = 0.5;
 }
 
+/******************************************************************************
+ * Specifies the generation of an L piece
+ ******************************************************************************/
 void generate_L(Piece *piece)
 {
     piece->rotate = rotate_L;
@@ -392,6 +443,9 @@ void generate_L(Piece *piece)
     piece->blocks[3].y_offset = 1;
 }
 
+/******************************************************************************
+ * Specifies the generation of a J piece
+ ******************************************************************************/
 void generate_J(Piece *piece)
 {
     piece->rotate = rotate_J;
@@ -411,6 +465,9 @@ void generate_J(Piece *piece)
     piece->blocks[3].y_offset = 0;
 }
 
+/******************************************************************************
+ * Specifies the generation of an S piece
+ ******************************************************************************/
 void generate_S(Piece *piece)
 {
     piece->rotate = rotate_S;
@@ -430,6 +487,9 @@ void generate_S(Piece *piece)
     piece->blocks[3].y_offset = 1;
 }
 
+/******************************************************************************
+ * Specifies the generation of a Z piece
+ ******************************************************************************/
 void generate_Z(Piece *piece)
 {
     piece->rotate = rotate_Z;
@@ -449,6 +509,9 @@ void generate_Z(Piece *piece)
     piece->blocks[3].y_offset = 0;
 }
 
+/******************************************************************************
+ * Specifies the generation of a T piece
+ ******************************************************************************/
 void generate_T(Piece *piece)
 {
     piece->rotate = rotate_T;
@@ -468,6 +531,9 @@ void generate_T(Piece *piece)
     piece->blocks[3].y_offset = 0;
 }
 
+/******************************************************************************
+ * Specifies the rotation of a line piece based on the given direction
+ ******************************************************************************/
 void rotate_line(int dir)
 {
     float origins[4][2] = { { 0.0, 0.0 }, { 0.0, 0.0 }, { 0.0, 0.0 },
@@ -588,11 +654,17 @@ void rotate_line(int dir)
     }
 }
 
+/******************************************************************************
+ * Specifies no rotation for the square piece
+ ******************************************************************************/
 void rotate_square(int dir)
 {
     return;
 }
 
+/******************************************************************************
+ * Specifies the rotation of an L piece based on the given direction
+ ******************************************************************************/
 void rotate_L(int dir)
 {
     float origins[4][2] = { { 0.0, 0.0 }, { 0.0, 0.0 }, { 0.0, 0.0 },
@@ -709,6 +781,10 @@ void rotate_L(int dir)
         }
     }
 }
+
+/******************************************************************************
+ * Specifies the rotation of a J piece based on the given direction
+ ******************************************************************************/
 void rotate_J(int dir)
 {
     float origins[4][2] = { { 0.0, 0.0 }, { 0.0, 0.0 }, { 0.0, 0.0 },
@@ -825,6 +901,10 @@ void rotate_J(int dir)
         }
     }
 }
+
+/******************************************************************************
+ * Specifies the rotation of an S piece based on the given direction
+ ******************************************************************************/
 void rotate_S(int dir)
 {
     float origins[4][2] = { { 0.0, 0.0 }, { 0.0, 0.0 }, { 0.0, 0.0 },
@@ -941,6 +1021,10 @@ void rotate_S(int dir)
         }
     }
 }
+
+/******************************************************************************
+ * Specifies the rotation of a Z piece based on the given direction
+ ******************************************************************************/
 void rotate_Z(int dir)
 {
     float origins[4][2] = { { 0.0, 0.0 }, { 0.0, 0.0 }, { 0.0, 0.0 },
@@ -1057,6 +1141,10 @@ void rotate_Z(int dir)
         }
     }
 }
+
+/******************************************************************************
+ * Specifies the rotation of a T piece based on the given direction
+ ******************************************************************************/
 void rotate_T(int dir)
 {
     float origins[4][2] = { { 0.0, 0.0 }, { 0.0, 0.0 }, { 0.0, 0.0 },
@@ -1177,6 +1265,9 @@ void rotate_T(int dir)
     }
 }
 
+/******************************************************************************
+ * Clears any full lines on the board
+ ******************************************************************************/
 void clear_lines()
 {
     int row = 0;
@@ -1213,6 +1304,9 @@ void clear_lines()
     }
 }
 
+/******************************************************************************
+ * Checks for game over by looking for non-empty blocks in the spawn area
+ ******************************************************************************/
 void check_over()
 {
     int row;
@@ -1230,6 +1324,9 @@ void check_over()
     }
 }
 
+/******************************************************************************
+ * Lands the current piece and fills the board accordingly
+ ******************************************************************************/
 void land_current()
 {
     int block_index;
@@ -1249,6 +1346,9 @@ void land_current()
     clear_lines();
 }
 
+/******************************************************************************
+ * Instantly drops the current piece based on it's current location
+ ******************************************************************************/
 void hard_drop()
 {
     if (((game->started) == false) || ((game->over) == true))
@@ -1285,16 +1385,25 @@ void hard_drop()
     }
 }
 
+/******************************************************************************
+ * Doubles the fall speed of the piece
+ ******************************************************************************/
 void enable_fast_fall()
 {
     (game->fall_speed) *= 2;
 }
 
+/******************************************************************************
+ * Halves the fall speed of the piece
+ ******************************************************************************/
 void disable_fast_fall()
 {
     (game->fall_speed) /= 2;
 }
 
+/******************************************************************************
+ * Moves the current piece down if possible based on the update frequency
+ ******************************************************************************/
 void run_cycle()
 {
     if (((game->started) == false) || ((game->over) == true))
