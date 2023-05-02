@@ -45,7 +45,8 @@ void init_board()
 void init_game()
 {
     game = malloc(sizeof(GameData));
-    if(game == NULL) {
+    if (game == NULL)
+    {
         exit(1);
     }
 
@@ -60,7 +61,8 @@ void init_game()
     (game->next) = malloc(sizeof(Piece));
     (game->held) = malloc(sizeof(Piece));
 
-    if (((game->current) == NULL) || ((game->next) == NULL) || ((game->held) == NULL))
+    if (((game->current) == NULL) || ((game->next) == NULL)
+            || ((game->held) == NULL))
     {
         exit(1);
     }
@@ -78,8 +80,10 @@ void init_game()
     (game->current)->x = (game->current)->y = -1;
     (game->next)->x = (game->next)->y = -1;
     (game->held)->x = (game->held)->y = -1;
-    (game->current)->rotation = (game->next)->rotation = (game->held)->rotation = 0;
-    (game->current)->rotate = (game->next)->rotate = (game->held)->rotate = NULL;
+    (game->current)->rotation = (game->next)->rotation =
+            (game->held)->rotation = 0;
+    (game->current)->rotate = (game->next)->rotate = (game->held)->rotate =
+            NULL;
     (game->current)->type = (game->next)->type = (game->held)->type = EMPTY;
     (game->started) = true;
     (game->over) = false;
@@ -120,6 +124,9 @@ void delete_game()
 
     free((game->held));
     (game->held) = NULL;
+
+    free(game);
+    game = NULL;
 }
 
 void rotate_current_right()
@@ -520,8 +527,10 @@ void rotate_line(int dir)
     {
         if (case_num >= 0)
         {
-            base_x = (game->current)->x + cases[d][(game->current)->rotation][case_num][0];
-            base_y = (game->current)->y + cases[d][(game->current)->rotation][case_num][1];
+            base_x = (game->current)->x
+                    + cases[d][(game->current)->rotation][case_num][0];
+            base_y = (game->current)->y
+                    + cases[d][(game->current)->rotation][case_num][1];
         }
         else
         {
@@ -552,8 +561,10 @@ void rotate_line(int dir)
 
     if (case_num >= 0)
     {
-        base_x = (game->current)->x + cases[d][(game->current)->rotation][case_num][0];
-        base_y = (game->current)->y + cases[d][(game->current)->rotation][case_num][1];
+        base_x = (game->current)->x
+                + cases[d][(game->current)->rotation][case_num][0];
+        base_y = (game->current)->y
+                + cases[d][(game->current)->rotation][case_num][1];
     }
     else
     {
@@ -638,8 +649,10 @@ void rotate_L(int dir)
     {
         if (case_num >= 0)
         {
-            base_x = (game->current)->x + cases[d][(game->current)->rotation][case_num][0];
-            base_y = (game->current)->y + cases[d][(game->current)->rotation][case_num][1];
+            base_x = (game->current)->x
+                    + cases[d][(game->current)->rotation][case_num][0];
+            base_y = (game->current)->y
+                    + cases[d][(game->current)->rotation][case_num][1];
         }
         else
         {
@@ -670,8 +683,10 @@ void rotate_L(int dir)
 
     if (case_num >= 0)
     {
-        base_x = (game->current)->x + cases[d][(game->current)->rotation][case_num][0];
-        base_y = (game->current)->y + cases[d][(game->current)->rotation][case_num][1];
+        base_x = (game->current)->x
+                + cases[d][(game->current)->rotation][case_num][0];
+        base_y = (game->current)->y
+                + cases[d][(game->current)->rotation][case_num][1];
     }
     else
     {
@@ -750,8 +765,10 @@ void rotate_J(int dir)
     {
         if (case_num >= 0)
         {
-            base_x = (game->current)->x + cases[d][(game->current)->rotation][case_num][0];
-            base_y = (game->current)->y + cases[d][(game->current)->rotation][case_num][1];
+            base_x = (game->current)->x
+                    + cases[d][(game->current)->rotation][case_num][0];
+            base_y = (game->current)->y
+                    + cases[d][(game->current)->rotation][case_num][1];
         }
         else
         {
@@ -782,8 +799,10 @@ void rotate_J(int dir)
 
     if (case_num >= 0)
     {
-        base_x = (game->current)->x + cases[d][(game->current)->rotation][case_num][0];
-        base_y = (game->current)->y + cases[d][(game->current)->rotation][case_num][1];
+        base_x = (game->current)->x
+                + cases[d][(game->current)->rotation][case_num][0];
+        base_y = (game->current)->y
+                + cases[d][(game->current)->rotation][case_num][1];
     }
     else
     {
@@ -862,8 +881,10 @@ void rotate_S(int dir)
     {
         if (case_num >= 0)
         {
-            base_x = (game->current)->x + cases[d][(game->current)->rotation][case_num][0];
-            base_y = (game->current)->y + cases[d][(game->current)->rotation][case_num][1];
+            base_x = (game->current)->x
+                    + cases[d][(game->current)->rotation][case_num][0];
+            base_y = (game->current)->y
+                    + cases[d][(game->current)->rotation][case_num][1];
         }
         else
         {
@@ -894,8 +915,10 @@ void rotate_S(int dir)
 
     if (case_num >= 0)
     {
-        base_x = (game->current)->x + cases[d][(game->current)->rotation][case_num][0];
-        base_y = (game->current)->y + cases[d][(game->current)->rotation][case_num][1];
+        base_x = (game->current)->x
+                + cases[d][(game->current)->rotation][case_num][0];
+        base_y = (game->current)->y
+                + cases[d][(game->current)->rotation][case_num][1];
     }
     else
     {
@@ -974,8 +997,10 @@ void rotate_Z(int dir)
     {
         if (case_num >= 0)
         {
-            base_x = (game->current)->x + cases[d][(game->current)->rotation][case_num][0];
-            base_y = (game->current)->y + cases[d][(game->current)->rotation][case_num][1];
+            base_x = (game->current)->x
+                    + cases[d][(game->current)->rotation][case_num][0];
+            base_y = (game->current)->y
+                    + cases[d][(game->current)->rotation][case_num][1];
         }
         else
         {
@@ -1006,8 +1031,10 @@ void rotate_Z(int dir)
 
     if (case_num >= 0)
     {
-        base_x = (game->current)->x + cases[d][(game->current)->rotation][case_num][0];
-        base_y = (game->current)->y + cases[d][(game->current)->rotation][case_num][1];
+        base_x = (game->current)->x
+                + cases[d][(game->current)->rotation][case_num][0];
+        base_y = (game->current)->y
+                + cases[d][(game->current)->rotation][case_num][1];
     }
     else
     {
@@ -1089,8 +1116,10 @@ void rotate_T(int dir)
     {
         if (case_num >= 0)
         {
-            base_x = (game->current)->x + cases[d][(game->current)->rotation][case_num][0];
-            base_y = (game->current)->y + cases[d][(game->current)->rotation][case_num][1];
+            base_x = (game->current)->x
+                    + cases[d][(game->current)->rotation][case_num][0];
+            base_y = (game->current)->y
+                    + cases[d][(game->current)->rotation][case_num][1];
         }
         else
         {
@@ -1121,8 +1150,10 @@ void rotate_T(int dir)
 
     if (case_num >= 0)
     {
-        base_x = (game->current)->x + cases[d][(game->current)->rotation][case_num][0];
-        base_y = (game->current)->y + cases[d][(game->current)->rotation][case_num][1];
+        base_x = (game->current)->x
+                + cases[d][(game->current)->rotation][case_num][0];
+        base_y = (game->current)->y
+                + cases[d][(game->current)->rotation][case_num][1];
     }
     else
     {
@@ -1271,7 +1302,8 @@ void run_cycle()
         return;
     }
 
-    (game->fall_amount) += (1 / ((float) UPDATE_FREQUENCY)) * (float) (game->fall_speed);
+    (game->fall_amount) += (1 / ((float) UPDATE_FREQUENCY))
+            * (float) (game->fall_speed);
     if ((game->fall_amount) < 1)
     {
         return;

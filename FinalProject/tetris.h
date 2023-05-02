@@ -5,57 +5,6 @@
  *     Authors: Rusheel Dasari and Khiem Vu
  */
 
-/*
- * struct Block {
- int rel_x;
- int rel_y;
- bool axis;
- } typedef Block;
-
- struct Piece {
- int x;
- int y;
- int left_max;
- int right_max;
- int bottom_max;
- Block blocks[4];
- } typedef Piece;
-
- struct LineBlock {
- int rel_x;
- int rel_y;
- } typedef LineBlock;
-
- struct SquareBlock {
- int rel_x;
- int rel_y;
- } typedef SquareBlock;
-
- struct LinePiece {
- int x;
- int y;
- char axis;
- int left_max;
- int right_max;
- int bottom_max;
- LineBlock blocks[4];
- } typedef LinePiece;
-
- struct SquarePiece {
- int x;
- int y;
- char axis;
- int left_max;
- int right_max;
- int bottom_max;
- SquareBlock blocks[4];
- } typedef SquarePiece;
- *
- *
- *
- *
- * */
-
 #ifndef TETRIS_H_
 #define TETRIS_H_
 
@@ -66,7 +15,7 @@
 #define GRID_HEIGHT         20
 #define SPAWN_X             4
 #define SPAWN_Y             18
-#define UPDATE_FREQUENCY    100
+#define UPDATE_FREQUENCY    20
 
 enum PieceType
 {
@@ -106,21 +55,9 @@ struct GameData
     bool held_swapped;
     int fall_speed;
     float fall_amount;
-} typedef GameData;
+}typedef GameData;
 
-GameData *game;
-
-/*
-Block **board;
-Piece *current;
-Piece *next;
-Piece *held;
-bool started = false;
-bool over = false;
-bool held_swapped = false;
-int fall_speed = 10;
-float fall_amount = 0;
-*/
+extern GameData *game;
 
 void init_board(void);
 void init_game(void);
