@@ -86,9 +86,9 @@ void peripherals_MKII_Buzzer_On(void);
 void peripherals_MKII_Buzzer_Off(void);
 
 /*
-void ADC14_PS2_XY(void);
-void ADC14_ACCEL_XY(void);
-*/
+ void ADC14_PS2_XY(void);
+ void ADC14_ACCEL_XY(void);
+ */
 
 void peripherals_ADC14_PS2_ACCEL_XY(void);
 

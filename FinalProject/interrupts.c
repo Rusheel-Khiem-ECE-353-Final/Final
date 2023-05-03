@@ -7,19 +7,25 @@
 
 #include "interrupts.h"
 
+volatile uint32_t PS2_X_DIR = ((int) (1.65 / (3.3 / 4096)));
+volatile uint32_t PS2_Y_DIR = ((int) (1.65 / (3.3 / 4096)));
+volatile uint32_t ACCEL_X_DIR = ((int) (1.65 / (3.3 / 4096)));
+volatile uint32_t ACCEL_Y_DIR = ((int) (1.65 / (3.3 / 4096)));
 
+void ADC14_IRQHandler()
+{
+    // Read the PS2-X value
+    PS2_X_DIR = ADC14->MEM[0];
 
+    // Read the PS2-Y value
+    PS2_Y_DIR = ADC14->MEM[1];
 
+    // Read the ACCEL-X value
+    ACCEL_X_DIR = ADC14->MEM[2];
 
-
-
-
-
-
-
-
-
-
+    // Read the ACCEL-Y value
+    ACCEL_Y_DIR = ADC14->MEM[3];
+}
 
 //volatile bool LCD_UPDATEABLE = false; // global variable used to indicate that the LCD screen can be updated
 //
@@ -122,5 +128,4 @@
 //    // Clear the timer interrupt
 //    TIMER32_2->INTCLR = BIT0;
 //}
-
 

@@ -10,11 +10,13 @@
 #include "lcd.h"
 #include "interrupts.h"
 #include "tetris.h"
+#include "peripherals.h"
 
 TaskHandle_t Task_Music_Buzzer_Handle = NULL;
 TaskHandle_t Task_Light_Sensor_Handle = NULL;
 TaskHandle_t Task_Screen_LCD_Handle = NULL;
 TaskHandle_t Task_Cycle_Game_Handle = NULL;
+TaskHandle_t Task_Update_Inputs_Game_Handle = NULL;
 TaskHandle_t Task_ADC_Handle = NULL;
 TaskHandle_t Task_ADC_Timer_Handle = NULL;
 TaskHandle_t Task_MKII_S1_Handle = NULL;
@@ -24,18 +26,159 @@ QueueHandle_t Queue_Game;
 
 bool light_mode = false;
 float light_mode_threshold = 350.0;
+InputData inputs = { 0, false, 0, false, 0, false, false, false, false };
 
 void task_ADC_bottom_half(void *pvParameters)
 {
+    static bool ps2_x_allowed = true;
+    static bool accel_allowed = true;
+
+    while (1)
+    {
+        if (ps2_x_allowed)
+        {
+            if (PS2_X_DIR > PS2_UPPER_THRESHOLD)
+            {
+                inputs.ps2_x = 1;
+            }
+            else if (PS2_X_DIR < PS2_LOWER_THRESHOLD)
+            {
+                inputs.ps2_x = -1;
+            }
+            else
+            {
+                inputs.ps2_x = 0;
+            }
+            inputs.ps2_x_allowed = true;
+            ps2_x_allowed = false;
+        }
+        else if ((PS2_X_DIR < PS2_UPPER_THRESHOLD)
+                && (PS2_X_DIR > PS2_LOWER_THRESHOLD))
+        {
+            ps2_x_allowed = true;
+            inputs.ps2_x_allowed = true;
+        }
+        else
+        {
+            inputs.ps2_x_allowed = false;
+        }
+
+        if (accel_allowed)
+        {
+            if (ACCEL_X_DIR > ACCEL_UPPER_THRESHOLD)
+            {
+                inputs.accel_rotate = 1;
+            }
+            else if (ACCEL_X_DIR < ACCEL_LOWER_THRESHOLD)
+            {
+                inputs.accel_rotate = -1;
+            }
+            else
+            {
+                inputs.accel_rotate = 0;
+            }
+            inputs.rotate_allowed = true;
+            accel_allowed = false;
+        }
+        else if ((ACCEL_X_DIR < ACCEL_UPPER_THRESHOLD)
+                && (ACCEL_X_DIR > ACCEL_LOWER_THRESHOLD))
+        {
+            accel_allowed = true;
+            inputs.rotate_allowed = true;
+        }
+        else
+        {
+            inputs.rotate_allowed = false;
+        }
+
+        if (ACCEL_Y_DIR > ACCEL_UPPER_THRESHOLD)
+        {
+            inputs.ps2_y = 1;
+        }
+        else if (ACCEL_Y_DIR < ACCEL_LOWER_THRESHOLD)
+        {
+            inputs.ps2_y = -1;
+        }
+        else
+        {
+            inputs.ps2_y = 0;
+        }
+
+        inputs.s1_allowed = false;
+        inputs.s2_allowed = false;
+        xQueueSendToBack(Queue_Peripherals, &inputs, portMAX_DELAY);
+        vTaskDelay(pdMS_TO_TICKS(10));
+    }
 }
+
 void task_ADC_timer(void *pvParameters)
 {
+    ADC14->CTL0 |= ADC14_CTL0_SC | ADC14_CTL0_ENC;
+    vTaskDelay(pdMS_TO_TICKS(10));
 }
+
 void task_MKII_S1(void *pvParameters)
 {
+    static bool s1_allowed = true;
+
+    while (1)
+    {
+        if (peripherals_MKII_S1() && s1_allowed)
+        {
+            inputs.s1_pressed = true;
+            inputs.s1_allowed = true;
+            s1_allowed = false;
+        }
+        else if (!peripherals_MKII_S1())
+        {
+            inputs.s1_pressed = false;
+            inputs.s1_allowed = true;
+            s1_allowed = true;
+        }
+        else
+        {
+            inputs.s1_pressed = true;
+            inputs.s1_allowed = false;
+        }
+
+        inputs.ps2_x_allowed = false;
+        inputs.rotate_allowed = false;
+        inputs.s2_allowed = false;
+        xQueueSendToBack(Queue_Peripherals, &inputs, portMAX_DELAY);
+        vTaskDelay(pdMS_TO_TICKS(10));
+    }
 }
+
 void task_MKII_S2(void *pvParameters)
 {
+    static bool s2_allowed = true;
+
+    while (1)
+    {
+        if (peripherals_MKII_S2() && s2_allowed)
+        {
+            inputs.s2_pressed = true;
+            inputs.s2_allowed = true;
+            s2_allowed = false;
+        }
+        else if (!peripherals_MKII_S2())
+        {
+            inputs.s2_pressed = false;
+            inputs.s2_allowed = true;
+            s2_allowed = true;
+        }
+        else
+        {
+            inputs.s2_pressed = true;
+            inputs.s2_allowed = false;
+        }
+
+        inputs.ps2_x_allowed = false;
+        inputs.rotate_allowed = false;
+        inputs.s1_allowed = false;
+        xQueueSendToBack(Queue_Peripherals, &inputs, portMAX_DELAY);
+        vTaskDelay(pdMS_TO_TICKS(10));
+    }
 }
 
 void task_music_buzzer(void *pvParameters)

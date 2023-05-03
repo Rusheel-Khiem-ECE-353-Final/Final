@@ -52,7 +52,9 @@ struct GameData
     Piece *held;
     bool started;
     bool over;
+    bool paused;
     bool held_swapped;
+    bool fast_fall;
     int fall_speed;
     float fall_amount;
 }typedef GameData;
@@ -98,4 +100,5 @@ void disable_fast_fall(void);
 void run_cycle(void);
 
 void task_cycle_game(void *pvParameters);
+void task_update_inputs_game(void *pvParameters);
 #endif /* TETRIS_H_ */

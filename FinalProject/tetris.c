@@ -63,8 +63,10 @@ void init_game()
     }
 
     game->started = false;
+    game->paused = false;
     game->over = false;
     game->held_swapped = false;
+    game->fast_fall = false;
     game->fall_speed = 10;
     game->fall_amount = 0;
 
@@ -95,7 +97,7 @@ void init_game()
     (game->current)->rotation = (game->next)->rotation =
             (game->held)->rotation = 0;
     (game->current)->rotate = (game->next)->rotate = (game->held)->rotate =
-            NULL;
+    NULL;
     (game->current)->type = (game->next)->type = (game->held)->type = EMPTY;
     (game->started) = true;
     (game->over) = false;
@@ -1393,7 +1395,11 @@ void hard_drop()
  ******************************************************************************/
 void enable_fast_fall()
 {
-    (game->fall_speed) *= 2;
+    if (!(game->fast_fall))
+    {
+        (game->fall_speed) *= 2;
+        game->fast_fall = true;
+    }
 }
 
 /******************************************************************************
@@ -1401,7 +1407,11 @@ void enable_fast_fall()
  ******************************************************************************/
 void disable_fast_fall()
 {
-    (game->fall_speed) /= 2;
+    if (game->fast_fall)
+    {
+        (game->fall_speed) /= 2;
+        game->fast_fall = false;
+    }
 }
 
 /******************************************************************************
@@ -1447,11 +1457,79 @@ void run_cycle()
 
 void task_cycle_game(void *pvParameters)
 {
-    while(1)
+    while (1)
     {
         run_cycle();
         xQueueSendToBack(Queue_Game, &game, portMAX_DELAY);
 
         vTaskDelay(pdMS_TO_TICKS(100));
+    }
+}
+
+void task_update_inputs_game(void *pvParameters)
+{
+    InputData inputs;
+    while (1)
+    {
+        xQueueReceive(Queue_Peripherals, &inputs, portMAX_DELAY);
+
+        if ((!(game->started)) || (game->paused))
+        {
+            if ((inputs.s1_allowed && inputs.s1_pressed)
+                    || (inputs.s2_allowed && inputs.s2_pressed))
+            {
+                game->started = true;
+                game->paused = false;
+            }
+            continue;
+        }
+
+        if (inputs.ps2_x_allowed)
+        {
+            if (inputs.ps2_x > 0)
+            {
+                move_current_right();
+            }
+            else if (inputs.ps2_x < 0)
+            {
+                move_current_left();
+            }
+        }
+
+        if (inputs.rotate_allowed)
+        {
+            if (inputs.accel_rotate > 0)
+            {
+                rotate_current_right();
+            }
+            else if (inputs.accel_rotate < 0)
+            {
+                rotate_current_left();
+            }
+        }
+
+        if (inputs.ps2_y > 0)
+        {
+            disable_fast_fall();
+            game->paused = true;
+        }
+        else if (inputs.ps2_y < 0)
+        {
+            enable_fast_fall();
+        }
+        else
+        {
+            disable_fast_fall();
+        }
+
+        if (inputs.s1_allowed && inputs.s1_pressed)
+        {
+            swap_held();
+        }
+
+        if (inputs.s2_allowed && inputs.s2_pressed)
+        {
+            hard_drop();
+        }
     }
 }

@@ -11,16 +11,36 @@
 #include "msp.h"
 #include <stdint.h>
 #include <stdio.h>
+#include <stdbool.h>
 
 /* RTOS header files */
 #include <FreeRTOS.h>
 #include <task.h>
 #include <queue.h>
 
+#define PS2_UPPER_THRESHOLD     ((int)(2.55/(3.3/4096)))
+#define PS2_LOWER_THRESHOLD     ((int)(0.75/(3.3/4096)))
+#define ACCEL_UPPER_THRESHOLD   ((int)(1.9/(3.3/4096)))
+#define ACCEL_LOWER_THRESHOLD   ((int)(1.3/(3.3/4096)))
+
+struct InputData {
+    char accel_rotate;
+    bool rotate_allowed;
+    char ps2_x;
+    bool ps2_x_allowed;
+    char ps2_y;
+    bool s1_pressed;
+    bool s1_allowed;
+    bool s2_pressed;
+    bool s2_allowed;
+
+}typedef InputData;
+
 extern TaskHandle_t Task_Music_Buzzer_Handle;
 extern TaskHandle_t Task_Light_Sensor_Handle;
 extern TaskHandle_t Task_Screen_LCD_Handle;
 extern TaskHandle_t Task_Cycle_Game_Handle;
+extern TaskHandle_t Task_Update_Inputs_Game_Handle;
 extern TaskHandle_t Task_ADC_Handle;
 extern TaskHandle_t Task_ADC_Timer_Handle;
 extern TaskHandle_t Task_MKII_S1_Handle;

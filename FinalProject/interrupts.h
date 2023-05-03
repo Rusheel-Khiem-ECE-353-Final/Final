@@ -12,12 +12,10 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-
-
-
-
-
-
+extern volatile uint32_t PS2_X_DIR;
+extern volatile uint32_t PS2_Y_DIR;
+extern volatile uint32_t ACCEL_X_DIR;
+extern volatile uint32_t ACCEL_Y_DIR;
 
 //extern volatile bool LCD_UPDATEABLE; // global variable used to indicate that the LCD screen can be updated
 //

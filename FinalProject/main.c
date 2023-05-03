@@ -62,7 +62,8 @@ int main(void)
 {
     WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;     // stop watchdog timer
 
-    Queue_Game = xQueueCreate(1, sizeof(GameData));
+    Queue_Game = xQueueCreate(1, sizeof(GameData*));
+    Queue_Peripherals = xQueueCreate(1, sizeof(InputData));
 
     xTaskCreate(task_music_buzzer, "Buzzer Music Task",
     configMINIMAL_STACK_SIZE,
@@ -75,6 +76,10 @@ int main(void)
     xTaskCreate(task_cycle_game, "Cycle Game Task",
     configMINIMAL_STACK_SIZE,
                 NULL, 1, &Task_Cycle_Game_Handle);
+
+    xTaskCreate(task_update_inputs_game, "Update Inputs Game Task",
+    configMINIMAL_STACK_SIZE,
+                NULL, 1, &Task_Update_Inputs_Game_Handle);
 
     xTaskCreate(task_screen_LCD, "LCD Screen Task",
     configMINIMAL_STACK_SIZE,
