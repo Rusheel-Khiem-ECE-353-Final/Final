@@ -24,11 +24,11 @@
 #define ACCEL_LOWER_THRESHOLD   ((int)(1.3/(3.3/4096)))
 
 struct InputData {
-    char accel_rotate;
+    int accel_rotate;
     bool rotate_allowed;
-    char ps2_x;
+    int ps2_x;
     bool ps2_x_allowed;
-    char ps2_y;
+    int ps2_y;
     bool s1_pressed;
     bool s1_allowed;
     bool s2_pressed;

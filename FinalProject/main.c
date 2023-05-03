@@ -107,9 +107,11 @@ int main(void)
 //    music_play_song();
 //    music_play_song();
 
+    /*
     while (1)
     {
     };
+    */
     return (0);
 }
 
