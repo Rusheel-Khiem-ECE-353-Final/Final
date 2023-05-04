@@ -15,6 +15,8 @@ volatile uint32_t ACCEL_Y_DIR = ((int) (1.65 / (3.3 / 4096)));
 
 void ADC14_IRQHandler()
 {
+    BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+
     // Read the PS2-X value
     PS2_X_DIR = ADC14->MEM[0];
 
@@ -27,7 +29,7 @@ void ADC14_IRQHandler()
     // Read the ACCEL-Y value
     ACCEL_Y_DIR = ADC14->MEM[3];
 
-    vTaskNotifyGiveFromISR(Task_ADC_Handle, pdFALSE);
+    vTaskNotifyGiveFromISR(Task_ADC_Handle, &xHigherPriorityTaskWoken);
 }
 
 //volatile bool LCD_UPDATEABLE = false; // global variable used to indicate that the LCD screen can be updated

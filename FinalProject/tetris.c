@@ -18,7 +18,7 @@ void init_board()
 {
     int row, col;
 
-    (game->board) = malloc(sizeof(Block*) * GRID_HEIGHT);
+    (game->board) = pvPortMalloc(sizeof(Block*) * GRID_HEIGHT);
     if ((game->board) == NULL)
     {
         exit(1);
@@ -26,7 +26,7 @@ void init_board()
 
     for (row = 0; row < GRID_HEIGHT; row++)
     {
-        *((game->board) + row) = malloc(sizeof(Block) * GRID_WIDTH);
+        *((game->board) + row) = pvPortMalloc(sizeof(Block) * GRID_WIDTH);
         if ((*((game->board) + row)) == NULL)
         {
             exit(1);
@@ -56,7 +56,7 @@ void init_board()
  ******************************************************************************/
 void init_game()
 {
-    game = malloc(sizeof(GameData));
+    game = pvPortMalloc(sizeof(GameData));
     if (game == NULL)
     {
         exit(1);
@@ -71,9 +71,9 @@ void init_game()
     game->fall_amount = 0;
 
     init_board();
-    (game->current) = malloc(sizeof(Piece));
-    (game->next) = malloc(sizeof(Piece));
-    (game->held) = malloc(sizeof(Piece));
+    (game->current) = pvPortMalloc(sizeof(Piece));
+    (game->next) = pvPortMalloc(sizeof(Piece));
+    (game->held) = pvPortMalloc(sizeof(Piece));
 
     if (((game->current) == NULL) || ((game->next) == NULL)
             || ((game->held) == NULL))
@@ -81,9 +81,9 @@ void init_game()
         exit(1);
     }
 
-    (game->current)->blocks = malloc(sizeof(Block) * 4);
-    (game->next)->blocks = malloc(sizeof(Block) * 4);
-    (game->held)->blocks = malloc(sizeof(Block) * 4);
+    (game->current)->blocks = pvPortMalloc(sizeof(Block) * 4);
+    (game->next)->blocks = pvPortMalloc(sizeof(Block) * 4);
+    (game->held)->blocks = pvPortMalloc(sizeof(Block) * 4);
 
     if (((game->current)->blocks == NULL) || ((game->next)->blocks == NULL)
             || ((game->held)->blocks == NULL))
@@ -112,11 +112,11 @@ void delete_board()
     int row;
     for (row = 0; row < GRID_HEIGHT; row++)
     {
-        free(*((game->board) + row));
+        vPortFree(*((game->board) + row));
         (*((game->board) + row)) = NULL;
     }
 
-    free((game->board));
+    vPortFree((game->board));
     (game->board) = NULL;
 }
 
@@ -127,25 +127,25 @@ void delete_game()
 {
     delete_board();
 
-    free((game->current)->blocks);
+    vPortFree((game->current)->blocks);
     (game->current)->blocks = NULL;
 
-    free((game->next)->blocks);
+    vPortFree((game->next)->blocks);
     (game->next)->blocks = NULL;
 
-    free((game->held)->blocks);
+    vPortFree((game->held)->blocks);
     (game->held)->blocks = NULL;
 
-    free((game->current));
+    vPortFree((game->current));
     (game->current) = NULL;
 
-    free((game->next));
+    vPortFree((game->next));
     (game->next) = NULL;
 
-    free((game->held));
+    vPortFree((game->held));
     (game->held) = NULL;
 
-    free(game);
+    vPortFree(game);
     game = NULL;
 }
 
@@ -1459,10 +1459,10 @@ void task_cycle_game(void *pvParameters)
 {
     while (1)
     {
+    	//vTaskDelay(pdMS_TO_TICKS(100));
         run_cycle();
         xQueueSendToBack(Queue_Game, &game, portMAX_DELAY);
-
-        vTaskDelay(pdMS_TO_TICKS(100));
+        //xTaskNotifyGive(Task_Screen_LCD_Handle);
     }
 }
 
@@ -1472,6 +1472,7 @@ void task_update_inputs_game(void *pvParameters)
     while (1)
     {
         xQueueReceive(Queue_Peripherals, &inputs, portMAX_DELAY);
+        //ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
 
         if ((!(game->started)) || (game->paused))
         {
@@ -1531,5 +1532,7 @@ void task_update_inputs_game(void *pvParameters)
         {
             hard_drop();
         }
+
+        xTaskNotifyGive(Task_Cycle_Game_Handle);
     }
 }

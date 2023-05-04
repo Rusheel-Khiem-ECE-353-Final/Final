@@ -69,45 +69,46 @@ int main(void)
 	peripherals_MKII_S1_init();
 	peripherals_MKII_S2_init();
 	peripherals_ADC14_PS2_ACCEL_XY();
+	init_game();
 
     Queue_Game = xQueueCreate(1, sizeof(GameData*));
     Queue_Peripherals = xQueueCreate(1, sizeof(InputData));
 
     xTaskCreate(task_music_buzzer, "Buzzer Music Task",
     configMINIMAL_STACK_SIZE,
-                NULL, 2, &Task_Music_Buzzer_Handle);
+                NULL, 1, &Task_Music_Buzzer_Handle);
 
     xTaskCreate(task_light_sensor, "Light Sensor Task",
     configMINIMAL_STACK_SIZE,
-                NULL, 1, &Task_Light_Sensor_Handle);
+                NULL, 4, &Task_Light_Sensor_Handle);
 
     xTaskCreate(task_cycle_game, "Cycle Game Task",
     configMINIMAL_STACK_SIZE,
-                NULL, 1, &Task_Cycle_Game_Handle);
+                NULL, 6, &Task_Cycle_Game_Handle);
 
     xTaskCreate(task_update_inputs_game, "Update Inputs Game Task",
     configMINIMAL_STACK_SIZE,
-                NULL, 1, &Task_Update_Inputs_Game_Handle);
+                NULL, 5, &Task_Update_Inputs_Game_Handle);
 
     xTaskCreate(task_screen_LCD, "LCD Screen Task",
     configMINIMAL_STACK_SIZE,
-                NULL, 1, &Task_Screen_LCD_Handle);
+                NULL, 2, &Task_Screen_LCD_Handle);
 
     xTaskCreate(task_ADC_timer, "ADC Timer Task",
     configMINIMAL_STACK_SIZE,
-                NULL, 1, &Task_ADC_Timer_Handle);
+                NULL, 3, &Task_ADC_Timer_Handle);
 
     xTaskCreate(task_ADC_bottom_half, "ADC Bottom Half Task",
     configMINIMAL_STACK_SIZE,
-                NULL, 1, &Task_ADC_Handle);
+                NULL, 7, &Task_ADC_Handle);
 
     xTaskCreate(task_MKII_S1, "MKII S1 Task",
     configMINIMAL_STACK_SIZE,
-                NULL, 1, &Task_MKII_S1_Handle);
+                NULL, 4, &Task_MKII_S1_Handle);
 
     xTaskCreate(task_MKII_S2, "MKII S2 Task",
     configMINIMAL_STACK_SIZE,
-                NULL, 1, &Task_MKII_S2_Handle);
+                NULL, 4, &Task_MKII_S2_Handle);
 
     /* Start the FreeRTOS scheduler */
     vTaskStartScheduler();
@@ -117,7 +118,7 @@ int main(void)
 
     while (1)
     {
-    };
+    }
 
     return (0);
 }

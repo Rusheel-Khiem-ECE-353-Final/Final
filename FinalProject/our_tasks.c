@@ -33,6 +33,7 @@ void task_ADC_bottom_half(void *pvParameters) {
 	static bool accel_allowed = true;
 
 	while (1) {
+		ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
 		if (ps2_x_allowed) {
 			if (PS2_X_DIR > PS2_UPPER_THRESHOLD) {
 				inputs.ps2_x = 1;
@@ -76,23 +77,24 @@ void task_ADC_bottom_half(void *pvParameters) {
 		} else {
 			inputs.ps2_y = 0;
 		}
-
-		inputs.s1_allowed = false;
-		inputs.s2_allowed = false;
-		xQueueSendToBack(Queue_Peripherals, &inputs, portMAX_DELAY);
-		vTaskDelay(pdMS_TO_TICKS(10));
+		// xQueueSendToBack(Queue_Peripherals, &inputs, portMAX_DELAY);
+		xTaskNotifyGive(Task_Light_Sensor_Handle);
 	}
 }
 
 void task_ADC_timer(void *pvParameters) {
-	ADC14->CTL0 |= ADC14_CTL0_SC | ADC14_CTL0_ENC;
-	vTaskDelay(pdMS_TO_TICKS(10));
+	while(1) {
+		//ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+		ADC14->CTL0 |= ADC14_CTL0_SC | ADC14_CTL0_ENC;
+		vTaskDelay(pdMS_TO_TICKS(100));
+	}
 }
 
 void task_MKII_S1(void *pvParameters) {
 	static bool s1_allowed = true;
 
 	while (1) {
+		ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
 		if (peripherals_MKII_S1() && s1_allowed) {
 			inputs.s1_pressed = true;
 			inputs.s1_allowed = true;
@@ -106,11 +108,8 @@ void task_MKII_S1(void *pvParameters) {
 			inputs.s1_allowed = false;
 		}
 
-		inputs.ps2_x_allowed = false;
-		inputs.rotate_allowed = false;
-		inputs.s2_allowed = false;
-		xQueueSendToBack(Queue_Peripherals, &inputs, portMAX_DELAY);
-		vTaskDelay(pdMS_TO_TICKS(10));
+		//xQueueSendToBack(Queue_Peripherals, &inputs, portMAX_DELAY);
+		xTaskNotifyGive(Task_MKII_S2_Handle);
 	}
 }
 
@@ -118,6 +117,7 @@ void task_MKII_S2(void *pvParameters) {
 	static bool s2_allowed = true;
 
 	while (1) {
+		ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
 		if (peripherals_MKII_S2() && s2_allowed) {
 			inputs.s2_pressed = true;
 			inputs.s2_allowed = true;
@@ -131,16 +131,14 @@ void task_MKII_S2(void *pvParameters) {
 			inputs.s2_allowed = false;
 		}
 
-		inputs.ps2_x_allowed = false;
-		inputs.rotate_allowed = false;
-		inputs.s1_allowed = false;
 		xQueueSendToBack(Queue_Peripherals, &inputs, portMAX_DELAY);
-		vTaskDelay(pdMS_TO_TICKS(10));
+		//xTaskNotifyGive(Task_Update_Inputs_Game_Handle);
 	}
 }
 
 void task_music_buzzer(void *pvParameters) {
 	while (1) {
+		ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
 		music_play_song();
 	}
 }
@@ -148,6 +146,7 @@ void task_music_buzzer(void *pvParameters) {
 void task_light_sensor(void *pvParameters) {
 	float lux;
 	while (1) {
+		ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
 		lux = opt3001_read_lux();
 
 		if (lux >= light_mode_threshold) {
@@ -155,6 +154,7 @@ void task_light_sensor(void *pvParameters) {
 		} else {
 			light_mode = false;
 		}
+		xTaskNotifyGive(Task_MKII_S1_Handle);
 	}
 }
 
@@ -495,5 +495,6 @@ void task_screen_LCD(void *pvParameters) {
 			lcd_draw_rectangle(draw_col, draw_row, BLOCK_SIZE,
 			BLOCK_SIZE, block_color);
 		}
+		xTaskNotifyGive(Task_Music_Buzzer_Handle);
 	}
 }
