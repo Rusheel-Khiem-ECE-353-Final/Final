@@ -355,8 +355,8 @@ void task_screen_LCD(void *pvParameters) {
 		int i = 0;
 		for (i = 0; i < 4; i++) {
 			block = game->held->blocks[i];
-			draw_row = (int) ((block.y_offset + game->held->y) * 6) + 3 - 1;
-			draw_col = (int) ((block.x_offset + game->held->x) * 6) + 3 - 1;
+			draw_row = (int) ((block.y_offset + (3*132/4 - 1)) * 6) + 3 - 1;
+			draw_col = (int) ((block.x_offset + (3*132/4 - 1)) * 6) + 3 - 1;
 
 			if (light_mode) {
 				switch (block.type) {
@@ -427,8 +427,8 @@ void task_screen_LCD(void *pvParameters) {
 		// draw next piece
 		for (i = 0; i < 4; i++) {
 			block = game->next->blocks[i];
-			draw_row = (int) ((block.y_offset + game->next->y) * 6) + 3 - 1;
-			draw_col = (int) ((block.x_offset + game->next->x) * 6) + 3 - 1;
+			draw_row = (int) ((block.y_offset + (3*132/4 - 1)) * 6) + 3 - 1;
+			draw_col = (int) ((block.x_offset + (132/4 - 1)) * 6) + 3 - 1;
 
 			if (light_mode) {
 				switch (block.type) {
