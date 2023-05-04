@@ -22,6 +22,18 @@
 // My notes: Calculated using (24MHz / note_freq) - 1
 //*****************************************************************************
 
+#define NOTE_G4S       57789 // 415 Hz
+#define NOTE_A4        54544 // 440 Hz
+#define NOTE_A4S       51483 // 466 Hz
+#define NOTE_B4        48594 // 494 Hz
+#define NOTE_C5        45866 // 523 Hz
+#define NOTE_C5S       43291 // 554 Hz
+#define NOTE_D5        40862 // 587 Hz
+#define NOTE_D5S       38569 // 622 Hz
+#define NOTE_E5        36404 // 659 Hz
+#define NOTE_F5        34360 // 698 Hz
+#define NOTE_F5S       32432 // 740 Hz
+#define NOTE_G5        30611 // 784 Hz
 #define NOTE_G5S       28880 // 831 Hz
 #define NOTE_A5        27272 // 880 Hz
 #define NOTE_A5S       25750 // 932 Hz

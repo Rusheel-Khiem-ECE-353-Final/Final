@@ -54,6 +54,7 @@
 #include "our_tasks.h"
 #include "peripherals.h"
 #include "tetris.h"
+#include "lcd.h"
 
 /*
  *  ======== main ========
@@ -62,12 +63,19 @@ int main(void)
 {
     WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;     // stop watchdog timer
 
+	Crystalfontz128x128_Init();
+	i2c_init();
+	opt3001_init();
+	peripherals_MKII_S1_init();
+	peripherals_MKII_S2_init();
+	peripherals_ADC14_PS2_ACCEL_XY();
+
     Queue_Game = xQueueCreate(1, sizeof(GameData*));
     Queue_Peripherals = xQueueCreate(1, sizeof(InputData));
 
     xTaskCreate(task_music_buzzer, "Buzzer Music Task",
     configMINIMAL_STACK_SIZE,
-                NULL, 1, &Task_Music_Buzzer_Handle);
+                NULL, 2, &Task_Music_Buzzer_Handle);
 
     xTaskCreate(task_light_sensor, "Light Sensor Task",
     configMINIMAL_STACK_SIZE,
@@ -107,11 +115,10 @@ int main(void)
 //    music_play_song();
 //    music_play_song();
 
-    /*
     while (1)
     {
     };
-    */
+
     return (0);
 }
 
