@@ -11,6 +11,7 @@
 #include "interrupts.h"
 #include "tetris.h"
 #include "peripherals.h"
+#include <stdio.h>
 
 TaskHandle_t Task_Music_Buzzer_Handle = NULL;
 TaskHandle_t Task_Light_Sensor_Handle = NULL;
@@ -25,7 +26,7 @@ QueueHandle_t Queue_Peripherals;
 QueueHandle_t Queue_Game;
 
 bool light_mode = false;
-float light_mode_threshold = 350.0;
+float light_mode_threshold = 200.0; //1341900.0;
 InputData inputs = { 0, false, 0, false, 0, false, false, false, false };
 
 void task_ADC_bottom_half(void *pvParameters) {
@@ -46,6 +47,7 @@ void task_ADC_bottom_half(void *pvParameters) {
 			ps2_x_allowed = false;
 		} else if ((PS2_X_DIR < PS2_UPPER_THRESHOLD)
 				&& (PS2_X_DIR > PS2_LOWER_THRESHOLD)) {
+		    inputs.ps2_x = 0;
 			ps2_x_allowed = true;
 			inputs.ps2_x_allowed = true;
 		} else {
@@ -65,14 +67,15 @@ void task_ADC_bottom_half(void *pvParameters) {
 		} else if ((ACCEL_X_DIR < ACCEL_UPPER_THRESHOLD)
 				&& (ACCEL_X_DIR > ACCEL_LOWER_THRESHOLD)) {
 			accel_allowed = true;
+			inputs.accel_rotate = 0;
 			inputs.rotate_allowed = true;
 		} else {
 			inputs.rotate_allowed = false;
 		}
 
-		if (ACCEL_Y_DIR > ACCEL_UPPER_THRESHOLD) {
+		if (PS2_Y_DIR > PS2_UPPER_THRESHOLD) {
 			inputs.ps2_y = 1;
-		} else if (ACCEL_Y_DIR < ACCEL_LOWER_THRESHOLD) {
+		} else if (PS2_Y_DIR < PS2_LOWER_THRESHOLD) {
 			inputs.ps2_y = -1;
 		} else {
 			inputs.ps2_y = 0;
@@ -104,7 +107,7 @@ void task_MKII_S1(void *pvParameters) {
 			inputs.s1_allowed = true;
 			s1_allowed = true;
 		} else {
-			inputs.s1_pressed = true;
+			inputs.s1_pressed = false;
 			inputs.s1_allowed = false;
 		}
 
@@ -127,7 +130,7 @@ void task_MKII_S2(void *pvParameters) {
 			inputs.s2_allowed = true;
 			s2_allowed = true;
 		} else {
-			inputs.s2_pressed = true;
+			inputs.s2_pressed = false;
 			inputs.s2_allowed = false;
 		}
 
@@ -148,6 +151,7 @@ void task_light_sensor(void *pvParameters) {
 	while (1) {
 		ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
 		lux = opt3001_read_lux();
+		//printf("%f", lux);
 
 		if (lux >= light_mode_threshold) {
 			light_mode = true;
@@ -185,7 +189,7 @@ void task_screen_LCD(void *pvParameters) {
 
 		// draw left side of board (game board and pieces)
 		// black game board
-		lcd_draw_rectangle(132/4 - 1, 132/2 - 1, 132/2, 120, LCD_COLOR_BLACK);
+		lcd_draw_rectangle(132/4 - 1, 132/2 - 10, 132/2 - 6, 132, LCD_COLOR_BLACK);
 
 		// draw blocks/pieces
 		for (lcd_row = 0; lcd_row < 20; lcd_row++) { // height
@@ -194,8 +198,8 @@ void task_screen_LCD(void *pvParameters) {
 				game_row = 19 - lcd_row;
 				game_col = lcd_col;
 
-				draw_row = (lcd_row * 6) + 3 - 1;
-				draw_col = (lcd_col * 6) + 3 - 1;
+				draw_row = (lcd_row * 6) + 6 - 1;
+				draw_col = (lcd_col * 6) + 6 - 1;
 
 				block = game->board[game_row][game_col];
 
@@ -276,8 +280,8 @@ void task_screen_LCD(void *pvParameters) {
 			int i = 0;
 			for (i = 0; i < 4; i++) {
 				block = game->current->blocks[i];
-				draw_row = (int) ((19 - (block.y_offset + game->current->y)) * 6) + 3 - 1;
-				draw_col = (int) ((block.x_offset + game->current->x) * 6) + 3 - 1;
+				draw_row = (int) ((19 - (block.y_offset + game->current->y)) * 6) + 6 - 1;
+				draw_col = (int) ((block.x_offset + game->current->x) * 6) + 6 - 1;
 
 				if (light_mode) {
 					switch (block.type) {
@@ -352,84 +356,88 @@ void task_screen_LCD(void *pvParameters) {
 		lcd_draw_rectangle(3*132/4 - 1, 132/4 - 1, 5*BLOCK_SIZE, 5*BLOCK_SIZE, LCD_COLOR_GRAY);
 		lcd_draw_rectangle(3*132/4 - 1, 3*132/4 - 1, 5*BLOCK_SIZE, 5*BLOCK_SIZE, LCD_COLOR_GRAY);
 
-		// draw hold piece
 		int i = 0;
-		for (i = 0; i < 4; i++) {
-			block = game->held->blocks[i];
-			draw_row = (int) ((block.y_offset + (3*132/4 - 1)) * 6);
-			draw_col = (int) ((block.x_offset + (3*132/4 - 1)) * 6);
 
-			if (light_mode) {
-				switch (block.type) {
-				case LINE:
-					block_color = LCD_COLOR_CYAN;
-					break;
+		// draw hold piece
+		if(game->held->type != EMPTY)
+		{
+            for (i = 0; i < 4; i++) {
+                block = game->held->blocks[i];
+                draw_row = (int) ((block.y_offset * -6 + (3*132/4 - 1)));
+                draw_col = (int) ((block.x_offset * 6 + (3*132/4 - 1)));
 
-				case SQUARE:
-					block_color = LCD_COLOR_YELLOW;
-					break;
+                if (light_mode) {
+                    switch (block.type) {
+                    case LINE:
+                        block_color = LCD_COLOR_CYAN;
+                        break;
 
-				case J:
-					block_color = LCD_COLOR_BLUE;
-					break;
+                    case SQUARE:
+                        block_color = LCD_COLOR_YELLOW;
+                        break;
 
-				case L:
-					block_color = LCD_COLOR_ORANGE;
-					break;
+                    case J:
+                        block_color = LCD_COLOR_BLUE;
+                        break;
 
-				case S:
-					block_color = LCD_COLOR_GREEN;
-					break;
+                    case L:
+                        block_color = LCD_COLOR_ORANGE;
+                        break;
 
-				case Z:
-					block_color = LCD_COLOR_RED;
-					break;
+                    case S:
+                        block_color = LCD_COLOR_GREEN;
+                        break;
 
-				case T:
-					block_color = LCD_COLOR_MAGENTA;
-					break;
-				}
-			} else {
-				switch (block.type) {
-				case LINE:
-					block_color = LCD_COLOR_BROWN;
-					break;
+                    case Z:
+                        block_color = LCD_COLOR_RED;
+                        break;
 
-				case SQUARE:
-					block_color = LCD_COLOR_MAGENTA;
-					break;
+                    case T:
+                        block_color = LCD_COLOR_MAGENTA;
+                        break;
+                    }
+                } else {
+                    switch (block.type) {
+                    case LINE:
+                        block_color = LCD_COLOR_BROWN;
+                        break;
 
-				case J:
-					block_color = LCD_COLOR_ORANGE;
-					break;
+                    case SQUARE:
+                        block_color = LCD_COLOR_MAGENTA;
+                        break;
 
-				case L:
-					block_color = LCD_COLOR_BLUE;
-					break;
+                    case J:
+                        block_color = LCD_COLOR_ORANGE;
+                        break;
 
-				case S:
-					block_color = LCD_COLOR_RED;
-					break;
+                    case L:
+                        block_color = LCD_COLOR_BLUE;
+                        break;
 
-				case Z:
-					block_color = LCD_COLOR_GREEN;
-					break;
+                    case S:
+                        block_color = LCD_COLOR_RED;
+                        break;
 
-				case T:
-					block_color = LCD_COLOR_YELLOW;
-					break;
-				}
-			}
+                    case Z:
+                        block_color = LCD_COLOR_GREEN;
+                        break;
 
-			lcd_draw_rectangle(draw_col, draw_row, BLOCK_SIZE,
-			BLOCK_SIZE, block_color);
+                    case T:
+                        block_color = LCD_COLOR_YELLOW;
+                        break;
+                    }
+                }
+
+                lcd_draw_rectangle(draw_col, draw_row, BLOCK_SIZE,
+                BLOCK_SIZE, block_color);
+            }
 		}
 
 		// draw next piece
 		for (i = 0; i < 4; i++) {
 			block = game->next->blocks[i];
-			draw_row = (int) ((block.y_offset + (3*132/4 - 1)) * 6);
-			draw_col = (int) ((block.x_offset + (132/4 - 1)) * 6);
+			draw_row = (int) ((block.y_offset * -6 + (132/4 - 1)));
+			draw_col = (int) ((block.x_offset * 6 + (3*132/4 - 1)));
 
 			if (light_mode) {
 				switch (block.type) {

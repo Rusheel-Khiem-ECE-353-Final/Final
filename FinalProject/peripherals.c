@@ -6,7 +6,7 @@
  */
 
 #include "peripherals.h"
-#include "math.h"
+//#include "math.h"
 
 /*
  * Busy waits for a given number of SMCLK clock cycles
@@ -303,7 +303,8 @@ float opt3001_read_lux(void)
 {
     // Read the Result register of OPT3001 and convert into Lux, then return.
     uint16_t result = i2c_read_16(OPT3001_SLAVE_ADDRESS, RESULT_REG);
-    float lux = 0.01 * pow(2, (result >> 12)) * (result & 0x0FFF);
+    //float lux = 0.01 * pow(2, (result >> 12)) * (result & 0x0FFF);
+    float lux = 0.01 * (1 << (result >> 12)) * (result & 0x0FFF);
 
     return lux; // Need to modify
 

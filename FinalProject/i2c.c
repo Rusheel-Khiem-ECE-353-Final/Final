@@ -131,7 +131,8 @@ void i2c_init(void)
                         EUSCI_B_CTLW0_SYNC |            // Sync mode
                         EUSCI_B_CTLW0_SSEL__SMCLK;      // SMCLK
 
-    EUSCI_B1->BRW =     SystemCoreClock/100000;         // baudrate = SMCLK / ? = 100kHz
+    EUSCI_B1->BRW =     SystemCoreClock/100000;         // baudrate = SMCLK / ? = 100kHz 3000000
+    //EUSCI_B1->BRW =     3000000/100000;                   // baudrate = SMCLK / ? = 100kHz
 
     EUSCI_B1->CTLW0 &=  ~EUSCI_A_CTLW0_SWRST;           // Release eUSCI from reset
 

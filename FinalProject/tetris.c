@@ -7,6 +7,7 @@
 
 #include "tetris.h"
 #include "our_tasks.h"
+#include <time.h>
 
 GameData *game;
 
@@ -61,6 +62,8 @@ void init_game()
     {
         exit(1);
     }
+
+    //srand(time(NULL));
 
     game->started = false;
     game->paused = false;
@@ -619,10 +622,11 @@ void rotate_line(int dir)
                     || ((game->board)[y][x].empty == false))
             {
                 success = false;
+                break;
             }
         }
 
-        if (success == false)
+        if (success == true)
         {
             break;
         }
@@ -645,8 +649,8 @@ void rotate_line(int dir)
 
     if (success == true)
     {
-        (game->current)->x += base_x;
-        (game->current)->y += base_y;
+        (game->current)->x = base_x;
+        (game->current)->y = base_y;
         (game->current)->rotation = ((game->current)->rotation + dir + 4) % 4;
     }
     else
@@ -747,10 +751,11 @@ void rotate_L(int dir)
                     || ((game->board)[y][x].empty == false))
             {
                 success = false;
+                break;
             }
         }
 
-        if (success == false)
+        if (success == true)
         {
             break;
         }
@@ -773,8 +778,8 @@ void rotate_L(int dir)
 
     if (success == true)
     {
-        (game->current)->x += base_x;
-        (game->current)->y += base_y;
+        (game->current)->x = base_x;
+        (game->current)->y = base_y;
         (game->current)->rotation = ((game->current)->rotation + dir + 4) % 4;
     }
     else
@@ -867,10 +872,11 @@ void rotate_J(int dir)
                     || ((game->board)[y][x].empty == false))
             {
                 success = false;
+                break;
             }
         }
 
-        if (success == false)
+        if (success == true)
         {
             break;
         }
@@ -893,8 +899,8 @@ void rotate_J(int dir)
 
     if (success == true)
     {
-        (game->current)->x += base_x;
-        (game->current)->y += base_y;
+        (game->current)->x = base_x;
+        (game->current)->y = base_y;
         (game->current)->rotation = ((game->current)->rotation + dir + 4) % 4;
     }
     else
@@ -986,11 +992,12 @@ void rotate_S(int dir)
             if (((x < 0) || (x > 9) || (y < 0) || (y > 19))
                     || ((game->board)[y][x].empty == false))
             {
-                success = false;
+                success = false; break;
+                break;
             }
         }
 
-        if (success == false)
+        if (success == true)
         {
             break;
         }
@@ -1013,8 +1020,8 @@ void rotate_S(int dir)
 
     if (success == true)
     {
-        (game->current)->x += base_x;
-        (game->current)->y += base_y;
+        (game->current)->x = base_x;
+        (game->current)->y = base_y;
         (game->current)->rotation = ((game->current)->rotation + dir + 4) % 4;
     }
     else
@@ -1106,11 +1113,12 @@ void rotate_Z(int dir)
             if (((x < 0) || (x > 9) || (y < 0) || (y > 19))
                     || ((game->board)[y][x].empty == false))
             {
-                success = false;
+                success = false; break;
+                break;
             }
         }
 
-        if (success == false)
+        if (success == true)
         {
             break;
         }
@@ -1133,8 +1141,8 @@ void rotate_Z(int dir)
 
     if (success == true)
     {
-        (game->current)->x += base_x;
-        (game->current)->y += base_y;
+        (game->current)->x = base_x;
+        (game->current)->y = base_y;
         (game->current)->rotation = ((game->current)->rotation + dir + 4) % 4;
     }
     else
@@ -1230,10 +1238,11 @@ void rotate_T(int dir)
                     || ((game->board)[y][x].empty == false))
             {
                 success = false;
+                break;
             }
         }
 
-        if (success == false)
+        if (success == true)
         {
             break;
         }
@@ -1256,8 +1265,8 @@ void rotate_T(int dir)
 
     if (success == true)
     {
-        (game->current)->x += base_x;
-        (game->current)->y += base_y;
+        (game->current)->x = base_x;
+        (game->current)->y = base_y;
         (game->current)->rotation = ((game->current)->rotation + dir + 4) % 4;
     }
     else
@@ -1397,7 +1406,7 @@ void enable_fast_fall()
 {
     if (!(game->fast_fall))
     {
-        (game->fall_speed) *= 2;
+        (game->fall_speed) *= 3;
         game->fast_fall = true;
     }
 }
@@ -1409,7 +1418,7 @@ void disable_fast_fall()
 {
     if (game->fast_fall)
     {
-        (game->fall_speed) /= 2;
+        (game->fall_speed) /= 3;
         game->fast_fall = false;
     }
 }
