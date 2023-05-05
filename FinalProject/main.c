@@ -84,15 +84,15 @@ int main(void)
 
     xTaskCreate(task_cycle_game, "Cycle Game Task",
     configMINIMAL_STACK_SIZE,
-                NULL, 6, &Task_Cycle_Game_Handle);
+                NULL, 4, &Task_Cycle_Game_Handle);
 
     xTaskCreate(task_update_inputs_game, "Update Inputs Game Task",
     configMINIMAL_STACK_SIZE,
-                NULL, 5, &Task_Update_Inputs_Game_Handle);
+                NULL, 4, &Task_Update_Inputs_Game_Handle);
 
     xTaskCreate(task_screen_LCD, "LCD Screen Task",
     configMINIMAL_STACK_SIZE,
-                NULL, 2, &Task_Screen_LCD_Handle);
+                NULL, 4, &Task_Screen_LCD_Handle);
 
     xTaskCreate(task_ADC_timer, "ADC Timer Task",
     configMINIMAL_STACK_SIZE,
@@ -100,7 +100,7 @@ int main(void)
 
     xTaskCreate(task_ADC_bottom_half, "ADC Bottom Half Task",
     configMINIMAL_STACK_SIZE,
-                NULL, 7, &Task_ADC_Handle);
+                NULL, 5, &Task_ADC_Handle);
 
     xTaskCreate(task_MKII_S1, "MKII S1 Task",
     configMINIMAL_STACK_SIZE,

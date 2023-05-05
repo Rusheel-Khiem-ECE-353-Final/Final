@@ -1424,6 +1424,11 @@ void run_cycle()
         return;
     }
 
+    if (game->current->type == EMPTY)
+    {
+        swap_next();
+    }
+
     (game->fall_amount) += (1 / ((float) UPDATE_FREQUENCY))
             * (float) (game->fall_speed);
     if ((game->fall_amount) < 1)
@@ -1459,7 +1464,8 @@ void task_cycle_game(void *pvParameters)
 {
     while (1)
     {
-    	//vTaskDelay(pdMS_TO_TICKS(100));
+        //vTaskDelay(pdMS_TO_TICKS(100));
+        ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
         run_cycle();
         xQueueSendToBack(Queue_Game, &game, portMAX_DELAY);
         //xTaskNotifyGive(Task_Screen_LCD_Handle);

@@ -247,6 +247,7 @@ void peripherals_ADC14_PS2_ACCEL_XY()
 
     // Enable ADC Interrupt in the NVIC
     NVIC_EnableIRQ(ADC14_IRQn);
+    NVIC_SetPriority(ADC14_IRQn, 33);
 
     // Turn ADC ON
     ADC14->CTL0 |= ADC14_CTL0_ON;

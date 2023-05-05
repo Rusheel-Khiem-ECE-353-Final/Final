@@ -86,7 +86,7 @@ void task_ADC_timer(void *pvParameters) {
 	while(1) {
 		//ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
 		ADC14->CTL0 |= ADC14_CTL0_SC | ADC14_CTL0_ENC;
-		vTaskDelay(pdMS_TO_TICKS(100));
+		vTaskDelay(pdMS_TO_TICKS(10));
 	}
 }
 
@@ -139,7 +139,7 @@ void task_MKII_S2(void *pvParameters) {
 void task_music_buzzer(void *pvParameters) {
 	while (1) {
 		ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
-		music_play_song();
+		//music_play_song();
 	}
 }
 
@@ -159,6 +159,13 @@ void task_light_sensor(void *pvParameters) {
 }
 
 void task_screen_LCD(void *pvParameters) {
+    // draw pieces that don't change, will probably move somewhere else
+    // gray background
+    lcd_draw_rectangle(132/2 - 1, 132/2 - 1, 132, 132, LCD_COLOR_WHITE);
+
+    // black borders for hold and next
+    lcd_draw_rectangle(3*132/4 - 1, 132/4 - 1, 6*BLOCK_SIZE, 6*BLOCK_SIZE, LCD_COLOR_BLACK);
+    lcd_draw_rectangle(3*132/4 - 1, 3*132/4 - 1, 6*BLOCK_SIZE, 6*BLOCK_SIZE, LCD_COLOR_BLACK);
 	while (1) {
 		GameData *game;
 		xQueueReceive(Queue_Game, &game, portMAX_DELAY);
@@ -173,13 +180,7 @@ void task_screen_LCD(void *pvParameters) {
 		Block block;
 		uint16_t block_color;
 
-		// draw pieces that don't change, will probably move somewhere else
-		// gray background
-		lcd_draw_rectangle(132/2 - 1, 132/2 - 1, 132, 132, LCD_COLOR_GRAY);
 
-		// black borders for hold and next
-		lcd_draw_rectangle(3*132/4 - 1, 132/4 - 1, 6*BLOCK_SIZE, 6*BLOCK_SIZE, LCD_COLOR_BLACK);
-		lcd_draw_rectangle(3*132/4 - 1, 3*132/4 - 1, 6*BLOCK_SIZE, 6*BLOCK_SIZE, LCD_COLOR_BLACK);
 
 
 		// draw left side of board (game board and pieces)
@@ -275,7 +276,7 @@ void task_screen_LCD(void *pvParameters) {
 			int i = 0;
 			for (i = 0; i < 4; i++) {
 				block = game->current->blocks[i];
-				draw_row = (int) ((block.y_offset + game->current->y) * 6) + 3 - 1;
+				draw_row = (int) ((19 - (block.y_offset + game->current->y)) * 6) + 3 - 1;
 				draw_col = (int) ((block.x_offset + game->current->x) * 6) + 3 - 1;
 
 				if (light_mode) {
@@ -355,8 +356,8 @@ void task_screen_LCD(void *pvParameters) {
 		int i = 0;
 		for (i = 0; i < 4; i++) {
 			block = game->held->blocks[i];
-			draw_row = (int) ((block.y_offset + (3*132/4 - 1)) * 6) + 3 - 1;
-			draw_col = (int) ((block.x_offset + (3*132/4 - 1)) * 6) + 3 - 1;
+			draw_row = (int) ((block.y_offset + (3*132/4 - 1)) * 6);
+			draw_col = (int) ((block.x_offset + (3*132/4 - 1)) * 6);
 
 			if (light_mode) {
 				switch (block.type) {
@@ -427,8 +428,8 @@ void task_screen_LCD(void *pvParameters) {
 		// draw next piece
 		for (i = 0; i < 4; i++) {
 			block = game->next->blocks[i];
-			draw_row = (int) ((block.y_offset + (3*132/4 - 1)) * 6) + 3 - 1;
-			draw_col = (int) ((block.x_offset + (132/4 - 1)) * 6) + 3 - 1;
+			draw_row = (int) ((block.y_offset + (3*132/4 - 1)) * 6);
+			draw_col = (int) ((block.x_offset + (132/4 - 1)) * 6);
 
 			if (light_mode) {
 				switch (block.type) {
