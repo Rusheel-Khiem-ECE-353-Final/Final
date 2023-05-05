@@ -288,13 +288,9 @@ bool peripherals_MKII_S2(void)
 void opt3001_init(void)
 {
     // Initialize OPT3001
-    /* ADD CODE */
-    //interrupt:    J1.8 --> P4.6
-    //SCL:          J1.9 --> P6.5
-    //SDA:          J1.10 -> P6.4
-    //0b1100010000010000 = 0xC410
-    i2c_write_16(OPT3001_SLAVE_ADDRESS, CONFIG_REG, 0xC410);
+    i2c_write_16(OPT3001_SLAVE_ADDRESS, CONFIG_REG, 0xC610);
 }
+
 
 /******************************************************************************
  * Returns the current ambient light in lux
@@ -302,9 +298,9 @@ void opt3001_init(void)
 float opt3001_read_lux(void)
 {
     // Read the Result register of OPT3001 and convert into Lux, then return.
-    uint16_t result = i2c_read_16(OPT3001_SLAVE_ADDRESS, RESULT_REG);
-    //float lux = 0.01 * pow(2, (result >> 12)) * (result & 0x0FFF);
-    float lux = 0.01 * (1 << (result >> 12)) * (result & 0x0FFF);
+    int res = i2c_read_16(OPT3001_SLAVE_ADDRESS, RESULT_REG);
+
+    float lux = 0.01 * (1 << (res >> 12)) * (res & 0x0FFF);
 
     return lux; // Need to modify
 

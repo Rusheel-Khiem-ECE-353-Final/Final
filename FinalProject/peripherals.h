@@ -9,13 +9,13 @@
 #define PERIPHERALS_H_
 
 // include libraries necessary for application
-#include <stdbool.h>    // can return true/false
-#include <stdint.h>     // access uint32 data types
-#include <msp.h>        // access to MSP device stuff
-#include "i2c.h"        // use I2C to communicate with OPT3001
+#include "msp.h"
+#include "i2c.h"
+#include <stdint.h>
+#include <stdbool.h>
 
-// OPT3001 ambient light sensor code
-#define OPT3001_SLAVE_ADDRESS 0x44
+
+#define OPT3001_SLAVE_ADDRESS 0x44 //01000100
 
 #define OPT_INTERRUPT_PIN 11
 #define RESULT_REG 0x00

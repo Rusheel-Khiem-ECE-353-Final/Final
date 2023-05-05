@@ -1,8 +1,8 @@
 /*
  * i2c.h
  *
- *  Created on: May 1, 2023
- *      Author: Rusheel Dasari and Khiem Vu
+ *  Created on: 5/1/2023
+ *      Author: Rusheel % Khiem
  */
 
 #ifndef I2C_H_
@@ -25,6 +25,7 @@ uint16_t i2c_read_16(uint8_t slave_address, uint8_t dev_address);
  *
  **********************************************************************************************/
 void i2c_write_16(uint8_t slave_address, uint8_t dev_address, uint16_t data);
+
 
 
 #endif /* I2C_H_ */
