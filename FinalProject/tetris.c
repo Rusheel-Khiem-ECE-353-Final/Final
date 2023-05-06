@@ -63,7 +63,7 @@ void init_game()
         exit(1);
     }
 
-    //srand(time(NULL));
+    srand(time(NULL));
 
     game->started = false;
     game->paused = false;
@@ -102,9 +102,6 @@ void init_game()
     (game->current)->rotate = (game->next)->rotate = (game->held)->rotate =
     NULL;
     (game->current)->type = (game->next)->type = (game->held)->type = EMPTY;
-    (game->started) = true;
-    (game->over) = false;
-    (game->held_swapped) = false;
 }
 
 /******************************************************************************
@@ -1428,7 +1425,7 @@ void disable_fast_fall()
  ******************************************************************************/
 void run_cycle()
 {
-    if (((game->started) == false) || ((game->over) == true))
+    if (((game->started) == false) || ((game->over) == true) || ((game->paused) == true))
     {
         return;
     }
@@ -1469,6 +1466,28 @@ void run_cycle()
     }
 }
 
+void reset_board()
+{
+    int i, j;
+    for (i = 0; i < GRID_HEIGHT; i++)
+    {
+        for (j = 0; j < GRID_WIDTH; j++)
+        {
+            game->board[i][j].empty = true;
+        }
+    }
+
+    game->started = false;
+    game->paused = false;
+    game->over = false;
+    game->held_swapped = false;
+    game->fast_fall = false;
+    game->fall_speed = 10;
+    game->fall_amount = 0;
+    game->held->type = EMPTY;
+    swap_next();
+}
+
 void task_cycle_game(void *pvParameters)
 {
     while (1)
@@ -1489,14 +1508,22 @@ void task_update_inputs_game(void *pvParameters)
         xQueueReceive(Queue_Peripherals, &inputs, portMAX_DELAY);
         //ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
 
-        if ((!(game->started)) || (game->paused))
+        if ((!(game->started)) || (game->paused) || (game->over))
         {
             if ((inputs.s1_allowed && inputs.s1_pressed)
                     || (inputs.s2_allowed && inputs.s2_pressed))
             {
-                game->started = true;
-                game->paused = false;
+                if (game->over)
+                {
+                    reset_board();
+                }
+                else
+                {
+                    game->started = true;
+                    game->paused = false;
+                }
             }
+            xTaskNotifyGive(Task_Cycle_Game_Handle);
             continue;
         }
 

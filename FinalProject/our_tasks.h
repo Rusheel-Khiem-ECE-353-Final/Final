@@ -36,6 +36,9 @@ struct InputData {
 
 }typedef InputData;
 
+extern bool play_music;
+extern bool started;
+
 extern TaskHandle_t Task_Music_Buzzer_Handle;
 extern TaskHandle_t Task_Light_Sensor_Handle;
 extern TaskHandle_t Task_Screen_LCD_Handle;

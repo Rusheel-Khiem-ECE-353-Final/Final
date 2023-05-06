@@ -6,109 +6,81 @@
  */
 
 #include "music.h"
+#include "our_tasks.h"
 
-Note_t Song[] =
-{
-    {NOTE_E6,ONE_QUARTER,true},  // Tone, Time, Delay
-    {NOTE_B5,ONE_EIGHTH,true},
-    {NOTE_C6,ONE_EIGHTH,true},
-    {NOTE_D6,ONE_QUARTER,true},
-    {NOTE_C6,ONE_EIGHTH,true},
-    {NOTE_B5,ONE_EIGHTH,true},
-    {NOTE_A5,ONE_QUARTER,true},
-    {NOTE_A5,ONE_EIGHTH,true},
-    {NOTE_C6,ONE_EIGHTH,true},
-    {NOTE_E6,ONE_QUARTER,true},
-    {NOTE_D6,ONE_EIGHTH,true},
-    {NOTE_C6,ONE_EIGHTH,true},
-    {NOTE_B5,THREE_EIGHTH,true},
-    {NOTE_C6,ONE_EIGHTH,true},
-    {NOTE_D6,ONE_QUARTER,true},
-    {NOTE_E6,ONE_QUARTER,true},
-    {NOTE_C6,ONE_QUARTER,true},
-    {NOTE_A5,ONE_QUARTER,true},
-    {NOTE_A5,ONE_QUARTER,true},
-    {0,ONE_QUARTER,true},
-    {0,ONE_EIGHTH,true},
-    {NOTE_D6,ONE_QUARTER,true},
-    {NOTE_F6,ONE_EIGHTH,true},
-    {NOTE_A6,ONE_QUARTER,true},
-    {NOTE_G6,ONE_EIGHTH,true},
-    {NOTE_F6,ONE_EIGHTH,true},
-    {NOTE_E6,THREE_EIGHTH,true},
-    {NOTE_C6,ONE_EIGHTH,true},
-    {NOTE_E6,ONE_QUARTER,true},
-    {NOTE_D6,ONE_EIGHTH,true},
-    {NOTE_C6,ONE_EIGHTH,true},
-    {NOTE_B5,ONE_QUARTER,true},
-    {NOTE_B5,ONE_EIGHTH,true},
-    {NOTE_C6,ONE_EIGHTH,true},
-    {NOTE_D6,ONE_QUARTER,true},
-    {NOTE_E6,ONE_QUARTER,true},
-    {NOTE_C6,ONE_QUARTER,true},
-    {NOTE_A5,ONE_QUARTER,true},
-    {NOTE_A5,ONE_QUARTER,true},
-    {0,ONE_QUARTER,true},
-    {NOTE_E6,ONE_QUARTER,true},
-    {NOTE_B5,ONE_EIGHTH,true},
-    {NOTE_C6,ONE_EIGHTH,true},
-    {NOTE_D6,ONE_QUARTER,true},
-    {NOTE_C6,ONE_EIGHTH,true},
-    {NOTE_B5,ONE_EIGHTH,true},
-    {NOTE_A5,ONE_QUARTER,true},
-    {NOTE_A5,ONE_EIGHTH,true},
-    {NOTE_C6,ONE_EIGHTH,true},
-    {NOTE_E6,ONE_QUARTER,true},
-    {NOTE_D6,ONE_EIGHTH,true},
-    {NOTE_C6,ONE_EIGHTH,true},
-    {NOTE_B5,THREE_EIGHTH,true},
-    {NOTE_C6,ONE_EIGHTH,true},
-    {NOTE_D6,ONE_QUARTER,true},
-    {NOTE_E6,ONE_QUARTER,true},
-    {NOTE_C6,ONE_QUARTER,true},
-    {NOTE_A5,ONE_QUARTER,true},
-    {NOTE_A5,ONE_QUARTER,true},
-    {0,ONE_QUARTER,true},
-    {0,ONE_EIGHTH,true},
-    {NOTE_D6,ONE_QUARTER,true},
-    {NOTE_F6,ONE_EIGHTH,true},
-    {NOTE_A6,ONE_QUARTER,true},
-    {NOTE_G6,ONE_EIGHTH,true},
-    {NOTE_F6,ONE_EIGHTH,true},
-    {NOTE_E6,THREE_EIGHTH,true},
-    {NOTE_C6,ONE_EIGHTH,true},
-    {NOTE_E6,ONE_QUARTER,true},
-    {NOTE_D6,ONE_EIGHTH,true},
-    {NOTE_C6,ONE_EIGHTH,true},
-    {NOTE_B5,ONE_QUARTER,true},
-    {NOTE_B5,ONE_EIGHTH,true},
-    {NOTE_C6,ONE_EIGHTH,true},
-    {NOTE_D6,ONE_QUARTER,true},
-    {NOTE_E6,ONE_QUARTER,true},
-    {NOTE_C6,ONE_QUARTER,true},
-    {NOTE_A5,ONE_QUARTER,true},
-    {NOTE_A5,ONE_QUARTER,true},
-    {0,ONE_QUARTER,true},
-    {NOTE_E5,ONE_HALF,true},
-    {NOTE_C5,ONE_HALF,true},
-    {NOTE_D5,ONE_HALF,true},
-    {NOTE_B4,ONE_HALF,true},
-    {NOTE_C5,ONE_HALF,true},
-    {NOTE_A4,ONE_HALF,true},
-    {NOTE_G4S,ONE_HALF,true},
-    {NOTE_B4,ONE_HALF,true},
-    {NOTE_E5,ONE_HALF,true},
-    {NOTE_C5,ONE_HALF,true},
-    {NOTE_D5,ONE_HALF,true},
-    {NOTE_B4,ONE_HALF,true},
-    {NOTE_C5,ONE_QUARTER,true},
-    {NOTE_E5,ONE_QUARTER,true},
-    {NOTE_A5,ONE_QUARTER,true},
-    {NOTE_A5,ONE_QUARTER,true},
-    {NOTE_G5S,THREE_QUARTER,true},
-    {0,ONE_QUARTER,true}
-};
-
+Note_t Song[] = {
+        { NOTE_E6, ONE_QUARTER, true },  // Tone, Time, Delay
+        { NOTE_B5, ONE_EIGHTH, true }, { NOTE_C6, ONE_EIGHTH, true }, {
+                NOTE_D6, ONE_QUARTER, true },
+        { NOTE_C6, ONE_EIGHTH, true }, { NOTE_B5, ONE_EIGHTH, true }, {
+                NOTE_A5, ONE_QUARTER, true },
+        { NOTE_A5, ONE_EIGHTH, true }, { NOTE_C6, ONE_EIGHTH, true }, {
+                NOTE_E6, ONE_QUARTER, true },
+        { NOTE_D6, ONE_EIGHTH, true }, { NOTE_C6, ONE_EIGHTH, true }, {
+                NOTE_B5, THREE_EIGHTH, true },
+        { NOTE_C6, ONE_EIGHTH, true }, { NOTE_D6, ONE_QUARTER, true }, {
+                NOTE_E6, ONE_QUARTER, true },
+        { NOTE_C6, ONE_QUARTER, true }, { NOTE_A5, ONE_QUARTER, true }, {
+                NOTE_A5, ONE_QUARTER, true },
+        { 0, ONE_QUARTER, true }, { 0, ONE_EIGHTH, true },
+        { NOTE_D6, ONE_QUARTER, true }, { NOTE_F6, ONE_EIGHTH, true }, {
+                NOTE_A6, ONE_QUARTER, true },
+        { NOTE_G6, ONE_EIGHTH, true }, { NOTE_F6, ONE_EIGHTH, true }, {
+                NOTE_E6, THREE_EIGHTH, true },
+        { NOTE_C6, ONE_EIGHTH, true }, { NOTE_E6, ONE_QUARTER, true }, {
+                NOTE_D6, ONE_EIGHTH, true },
+        { NOTE_C6, ONE_EIGHTH, true }, { NOTE_B5, ONE_QUARTER, true }, {
+                NOTE_B5, ONE_EIGHTH, true },
+        { NOTE_C6, ONE_EIGHTH, true }, { NOTE_D6, ONE_QUARTER, true }, {
+                NOTE_E6, ONE_QUARTER, true },
+        { NOTE_C6, ONE_QUARTER, true }, { NOTE_A5, ONE_QUARTER, true }, {
+                NOTE_A5, ONE_QUARTER, true },
+        { 0, ONE_QUARTER, true }, { NOTE_E6, ONE_QUARTER, true }, { NOTE_B5,
+                                                                    ONE_EIGHTH,
+                                                                    true },
+        { NOTE_C6, ONE_EIGHTH, true }, { NOTE_D6, ONE_QUARTER, true }, {
+                NOTE_C6, ONE_EIGHTH, true },
+        { NOTE_B5, ONE_EIGHTH, true }, { NOTE_A5, ONE_QUARTER, true }, {
+                NOTE_A5, ONE_EIGHTH, true },
+        { NOTE_C6, ONE_EIGHTH, true }, { NOTE_E6, ONE_QUARTER, true }, {
+                NOTE_D6, ONE_EIGHTH, true },
+        { NOTE_C6, ONE_EIGHTH, true }, { NOTE_B5, THREE_EIGHTH, true }, {
+                NOTE_C6, ONE_EIGHTH, true },
+        { NOTE_D6, ONE_QUARTER, true }, { NOTE_E6, ONE_QUARTER, true }, {
+                NOTE_C6, ONE_QUARTER, true },
+        { NOTE_A5, ONE_QUARTER, true }, { NOTE_A5, ONE_QUARTER, true }, {
+                0, ONE_QUARTER, true },
+        { 0, ONE_EIGHTH, true }, { NOTE_D6, ONE_QUARTER, true }, { NOTE_F6,
+                                                                   ONE_EIGHTH,
+                                                                   true },
+        { NOTE_A6, ONE_QUARTER, true }, { NOTE_G6, ONE_EIGHTH, true }, {
+                NOTE_F6, ONE_EIGHTH, true },
+        { NOTE_E6, THREE_EIGHTH, true }, { NOTE_C6, ONE_EIGHTH, true }, {
+                NOTE_E6, ONE_QUARTER, true },
+        { NOTE_D6, ONE_EIGHTH, true }, { NOTE_C6, ONE_EIGHTH, true }, {
+                NOTE_B5, ONE_QUARTER, true },
+        { NOTE_B5, ONE_EIGHTH, true }, { NOTE_C6, ONE_EIGHTH, true }, {
+                NOTE_D6, ONE_QUARTER, true },
+        { NOTE_E6, ONE_QUARTER, true }, { NOTE_C6, ONE_QUARTER, true }, {
+                NOTE_A5, ONE_QUARTER, true },
+        { NOTE_A5, ONE_QUARTER, true }, { 0, ONE_QUARTER, true }, { NOTE_E5,
+                                                                    ONE_HALF,
+                                                                    true },
+        { NOTE_C5, ONE_HALF, true }, { NOTE_D5, ONE_HALF, true }, { NOTE_B4,
+                                                                    ONE_HALF,
+                                                                    true },
+        { NOTE_C5, ONE_HALF, true }, { NOTE_A4, ONE_HALF, true }, { NOTE_G4S,
+                                                                    ONE_HALF,
+                                                                    true },
+        { NOTE_B4, ONE_HALF, true }, { NOTE_E5, ONE_HALF, true }, { NOTE_C5,
+                                                                    ONE_HALF,
+                                                                    true },
+        { NOTE_D5, ONE_HALF, true }, { NOTE_B4, ONE_HALF, true }, { NOTE_C5,
+                                                                    ONE_QUARTER,
+                                                                    true },
+        { NOTE_E5, ONE_QUARTER, true }, { NOTE_A5, ONE_QUARTER, true }, {
+                NOTE_A5, ONE_QUARTER, true },
+        { NOTE_G5S, THREE_QUARTER, true }, { 0, ONE_QUARTER, true } };
 
 //***************************************************************
 // This function returns how long an individual  notes is played
@@ -117,47 +89,46 @@ uint32_t music_get_time_delay(measure_time_t time)
 {
     uint32_t time_return = 0;
 
-    time_return  = MEASURE_DURATION * MEASURE_RATIO;
+    time_return = MEASURE_DURATION * MEASURE_RATIO;
 
-    switch(time)
+    switch (time)
     {
-        case ONE_QUARTER:
-        {
-            time_return = time_return / 4;
-            break;
-        }
-        case ONE_HALF:
-        {
-            time_return = time_return / 2;
-            break;
-        }
-        case THREE_QUARTER:
-        {
-            time_return = time_return * 3;
-            time_return = time_return / 4;
-            break;
-        }
-        case ONE_EIGHTH:
-        {
-            time_return = time_return / 8;
-            break;
-        }
-        case THREE_EIGHTH:
-        {
-            time_return = time_return * 3;
-            time_return = time_return / 8;
-            break;
-        }
-        default:
-        {
-            break;
-        }
+    case ONE_QUARTER:
+    {
+        time_return = time_return / 4;
+        break;
+    }
+    case ONE_HALF:
+    {
+        time_return = time_return / 2;
+        break;
+    }
+    case THREE_QUARTER:
+    {
+        time_return = time_return * 3;
+        time_return = time_return / 4;
+        break;
+    }
+    case ONE_EIGHTH:
+    {
+        time_return = time_return / 8;
+        break;
+    }
+    case THREE_EIGHTH:
+    {
+        time_return = time_return * 3;
+        time_return = time_return / 8;
+        break;
+    }
+    default:
+    {
+        break;
+    }
     }
 
     return time_return - DELAY_AMOUNT;
 
 }
-
 
 //***************************************************************************
 // Plays a single note of the song based on note_index.  After
@@ -190,11 +161,11 @@ static void music_play_note(uint16_t note_index)
     peripherals_MKII_Buzzer_Off();
 
     // if delay needed between notes, add it
-    if (Song[note_index].delay) {
+    if (Song[note_index].delay)
+    {
         peripherals_T32_1_wait(DELAY_AMOUNT);
     }
 }
-
 
 //***************************************************************
 // Plays the song (loop through, playing each note)
@@ -205,9 +176,14 @@ void music_play_song(void)
     int i;
     for (i = 0; i < SONG_NUM_NOTES; i++)
     {
+        while (!play_music)
+        {
+            if(started == false)
+            {
+                i = 0;
+            }
+        }
         music_play_note(i);
     }
 }
-
-
 
