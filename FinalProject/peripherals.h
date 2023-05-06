@@ -85,11 +85,12 @@ void peripherals_MKII_Buzzer_Off(void);
  void ADC14_ACCEL_XY(void);
  */
 
+// ADC
 void peripherals_ADC14_PS2_ACCEL_XY(void);
 
+// S1 and S2
 void peripherals_MKII_S1_init(void);
 void peripherals_MKII_S2_init(void);
-
 bool peripherals_MKII_S1(void);
 bool peripherals_MKII_S2(void);
 

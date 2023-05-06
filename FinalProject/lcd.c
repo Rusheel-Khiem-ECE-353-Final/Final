@@ -17,8 +17,6 @@
  ******************************************************************************/
 void HAL_LCD_PortInit(void)
 {
-    // ADD CODE 
-    
     // LCD_SCK
     LCD_SCK_PORT->SEL0 |= LCD_SCK_PIN;
     LCD_SCK_PORT->SEL1 &= ~LCD_SCK_PIN;
@@ -45,7 +43,7 @@ void HAL_LCD_SpiInit(void)
 {
     EUSCI_B0->CTLW0 =  EUSCI_B_CTLW0_SWRST;            // Put eUSCI state machine in reset
 
-    // ADD CODE to define the behavior of the eUSCI_B0 as a SPI interface
+    // defines the behavior of the eUSCI_B0 as a SPI interface
     EUSCI_B0->CTLW0 =   EUSCI_B_CTLW0_CKPH |        // Phase of 1
                         EUSCI_B_CTLW0_MSB |         // MSB first
                         EUSCI_B_CTLW0_MST |         // Set as SPI master
@@ -55,7 +53,7 @@ void HAL_LCD_SpiInit(void)
                         // EUSCI_B_CTLW0_STEM |     // UCxSTE digital output
                         EUSCI_B_CTLW0_SWRST;        // Remain eUSCI state machine in reset
 
-    // ADD CODE to set the SPI Clock to 12MHz.
+    // Sets the SPI Clock to 12MHz.
     //
     // Divide clock speed by 2 (24MHz/2) = 12 MHz
     //fBitClock = fBRCLK/(UCBRx+1).
@@ -81,8 +79,6 @@ void HAL_LCD_SpiInit(void)
 //*****************************************************************************
 void HAL_LCD_writeCommand(uint8_t command)
 {
-    // ADD CODE
-
     // Set to command mode -- DC PIN Set to 0
     LCD_DC_PORT->OUT &= ~LCD_DC_PIN;
 
@@ -113,8 +109,6 @@ void HAL_LCD_writeCommand(uint8_t command)
 //*****************************************************************************
 void HAL_LCD_writeData(uint8_t data)
 {
-    // ADD CODE
-
     // Busy wait while the data is being transmitted. Check the STATW register and see if it is busy 
     while ((EUSCI_B0->STATW & EUSCI_B_STATW_SPI_BUSY) == 1) {
         // wait
@@ -135,7 +129,6 @@ void HAL_LCD_writeData(uint8_t data)
 void Crystalfontz128x128_SetDrawFrame(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
 {
 
-    // ADD CODE
     // Write the CM_CASET command followed by the 4 bytes of data
     // used to set the Column start and end rows.
     HAL_LCD_writeCommand(CM_CASET);
@@ -145,7 +138,6 @@ void Crystalfontz128x128_SetDrawFrame(uint16_t x0, uint16_t y0, uint16_t x1, uin
     HAL_LCD_writeData(x1);
 
 
-    // ADD CODE
     // Write the CM_RASET command followed by the 4 bytes of data
     // used to set the Row start and end rows.
     HAL_LCD_writeCommand(CM_RASET);

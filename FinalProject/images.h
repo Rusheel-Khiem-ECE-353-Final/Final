@@ -10,10 +10,12 @@
 
 #include <stdint.h>
 
+// Title Splash Screen
 #define TITLE_WIDTH    110
 #define TITLE_HEIGHT   76
 extern const uint8_t Bitmaps_Title[];
 
+// Game Over Splash Screen
 #define END_WIDTH     132
 #define END_HEIGHT    102
 extern const uint8_t Bitmaps_GameOver[];

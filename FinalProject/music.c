@@ -8,6 +8,7 @@
 #include "music.h"
 #include "our_tasks.h"
 
+// full Tetris Song
 Note_t Song[] = {
         { NOTE_E6, ONE_QUARTER, true },  // Tone, Time, Delay
         { NOTE_B5, ONE_EIGHTH, true }, { NOTE_C6, ONE_EIGHTH, true }, {
@@ -169,7 +170,8 @@ static void music_play_note(uint16_t note_index)
 
 //***************************************************************
 // Plays the song (loop through, playing each note)
-// and then returns
+// and then returns. If game is over, paused, or starting, doesn't
+// play and resumes where it left off (restarts if game over)
 //***************************************************************
 void music_play_song(void)
 {

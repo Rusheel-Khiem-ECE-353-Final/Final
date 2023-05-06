@@ -14,6 +14,7 @@
 #include "images.h"
 #include <stdio.h>
 
+// set Task Handles to NULL
 TaskHandle_t Task_Music_Buzzer_Handle = NULL;
 TaskHandle_t Task_Light_Sensor_Handle = NULL;
 TaskHandle_t Task_Screen_LCD_Handle = NULL;
@@ -23,9 +24,12 @@ TaskHandle_t Task_ADC_Handle = NULL;
 TaskHandle_t Task_ADC_Timer_Handle = NULL;
 TaskHandle_t Task_MKII_S1_Handle = NULL;
 TaskHandle_t Task_MKII_S2_Handle = NULL;
+
+// define Queues
 QueueHandle_t Queue_Peripherals;
 QueueHandle_t Queue_Game;
 
+// global variables required for correct implementation
 bool light_mode = true;
 bool started = false;
 bool over = false;
@@ -33,14 +37,21 @@ bool play_music = true;
 float light_mode_threshold = 200.0; //1341900.0;
 InputData inputs = { 0, false, 0, false, 0, false, false, false, false };
 
+/*
+ * Task that receives notification from ADC IRQ. Gives to Light Sensor Task
+ */
 void task_ADC_bottom_half(void *pvParameters)
 {
+	// allow both Joystick and Accelerometer directions to be changed
     static bool ps2_x_allowed = true;
     static bool accel_allowed = true;
 
     while (1)
     {
+    	// take the task from ADC IRQ
         ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+
+        // determine Joystick and Accerelometer directions
         if (ps2_x_allowed)
         {
             if (PS2_X_DIR > PS2_UPPER_THRESHOLD)
@@ -111,28 +122,41 @@ void task_ADC_bottom_half(void *pvParameters)
         {
             inputs.ps2_y = 0;
         }
-        // xQueueSendToBack(Queue_Peripherals, &inputs, portMAX_DELAY);
+
+        // give task
         xTaskNotifyGive(Task_Light_Sensor_Handle);
     }
 }
 
+/**
+ * task for ADC timer, top-half for ADC bottom half task
+ */
 void task_ADC_timer(void *pvParameters)
 {
     while (1)
     {
-        //ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+    	// enable ADC conversion
         ADC14->CTL0 |= ADC14_CTL0_SC | ADC14_CTL0_ENC;
+
+        // wait 10 ms
         vTaskDelay(pdMS_TO_TICKS(10));
     }
 }
 
+/**
+ * task for S1, received from light sensor and gives to S2 task
+ */
 void task_MKII_S1(void *pvParameters)
 {
+	// allow s1 to be changed
     static bool s1_allowed = true;
 
     while (1)
     {
+    	// take task from light sensor
         ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+
+        // determine if S1 is pressed and perform correct action
         if (peripherals_MKII_S1() && s1_allowed)
         {
             inputs.s1_pressed = true;
@@ -151,11 +175,14 @@ void task_MKII_S1(void *pvParameters)
             inputs.s1_allowed = false;
         }
 
-        //xQueueSendToBack(Queue_Peripherals, &inputs, portMAX_DELAY);
+        // give from task
         xTaskNotifyGive(Task_MKII_S2_Handle);
     }
 }
 
+/**
+ * task for S2. receive from S1 and give to game-inputs task
+ */
 void task_MKII_S2(void *pvParameters)
 {
     static bool s2_allowed = true;
@@ -181,11 +208,14 @@ void task_MKII_S2(void *pvParameters)
             inputs.s2_allowed = false;
         }
 
+        // send queue to change game inputs
         xQueueSendToBack(Queue_Peripherals, &inputs, portMAX_DELAY);
-        //xTaskNotifyGive(Task_Update_Inputs_Game_Handle);
     }
 }
 
+/**
+ * music task. play after all other tasks have run
+ */
 void task_music_buzzer(void *pvParameters)
 {
     while (1)
@@ -195,6 +225,11 @@ void task_music_buzzer(void *pvParameters)
     }
 }
 
+/*
+ * light sensor task. read value and change color palette
+ * take from ADC bottom half and give
+ * to S1
+ */
 void task_light_sensor(void *pvParameters)
 {
     float lux;
@@ -216,41 +251,16 @@ void task_light_sensor(void *pvParameters)
     }
 }
 
+/**
+ * LCD task. display screen with correct inputs
+ */
 void task_screen_LCD(void *pvParameters)
 {
     static bool invert = true;
     static bool background = false;
     static bool refreshed_started = false;
     static bool refreshed_over = false;
-    // draw pieces that don't change, will probably move somewhere else
-    // gray background
 
-    /*
-    if (!started)
-    {
-        lcd_draw_rectangle(132 / 2 - 1, 132 / 2 - 1, 132, 132, LCD_COLOR_BLACK);
-        lcd_draw_image(132 / 2 - 1, 132 / 2 - 1, TITLE_WIDTH, TITLE_HEIGHT,
-                       Bitmaps_Title, light_mode ? LCD_COLOR_GREEN : LCD_COLOR_MAGENTA, LCD_COLOR_BLACK);
-    }
-
-    if (started && !over)
-    {
-        lcd_draw_rectangle(132 / 2 - 1, 132 / 2 - 1, 132, 132, LCD_COLOR_WHITE);
-
-        // black borders for hold and next
-        lcd_draw_rectangle(3 * 132 / 4 - 1, 132 / 4 - 1, 6 * BLOCK_SIZE,
-                           6 * BLOCK_SIZE, LCD_COLOR_BLACK);
-        lcd_draw_rectangle(3 * 132 / 4 - 1, 3 * 132 / 4 - 1, 6 * BLOCK_SIZE,
-                           6 * BLOCK_SIZE, LCD_COLOR_BLACK);
-    }
-
-    if (over)
-    {
-        lcd_draw_rectangle(132 / 2 - 1, 132 / 2 - 1, 132, 132, LCD_COLOR_BLACK);
-        lcd_draw_image(132 / 2 - 1, 132 / 2 - 1, END_WIDTH, END_HEIGHT,
-                       Bitmaps_GameOver, LCD_COLOR_RED, LCD_COLOR_BLACK);
-    }
-    */
     while (1)
     {
         GameData *game;
@@ -259,6 +269,7 @@ void task_screen_LCD(void *pvParameters)
         started = game->started;
         over = game->over;
 
+        // determine if splash screens should be drawn
         if (!started || over)
         {
 
@@ -330,6 +341,7 @@ void task_screen_LCD(void *pvParameters)
             }
         }
 
+        // determine if should play music
         if (game->paused == true || game->over == true || game->started != true)
         {
             play_music = false;
@@ -702,6 +714,8 @@ void task_screen_LCD(void *pvParameters)
             BLOCK_SIZE,
                                block_color);
         }
+
+        // give to music buzzer task
         xTaskNotifyGive(Task_Music_Buzzer_Handle);
     }
 }

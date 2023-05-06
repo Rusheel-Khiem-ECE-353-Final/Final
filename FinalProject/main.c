@@ -63,6 +63,7 @@ int main(void)
 {
     WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;     // stop watchdog timer
 
+    // initialize peripherals, game, i2c, etc.
 	Crystalfontz128x128_Init();
 	i2c_init();
 	opt3001_init();
@@ -71,9 +72,11 @@ int main(void)
 	peripherals_ADC14_PS2_ACCEL_XY();
 	init_game();
 
+	// define queues
     Queue_Game = xQueueCreate(1, sizeof(GameData*));
     Queue_Peripherals = xQueueCreate(1, sizeof(InputData));
 
+    // create tasks
     xTaskCreate(task_music_buzzer, "Buzzer Music Task",
     configMINIMAL_STACK_SIZE,
                 NULL, 1, &Task_Music_Buzzer_Handle);
@@ -112,9 +115,6 @@ int main(void)
 
     /* Start the FreeRTOS scheduler */
     vTaskStartScheduler();
-
-//    music_play_song();
-//    music_play_song();
 
     while (1)
     {
