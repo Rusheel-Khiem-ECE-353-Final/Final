@@ -306,37 +306,3 @@ float opt3001_read_lux(void)
 
 }
 
-/******************************************************************************
- * Changes the LCD screen's colors based on the lux
- *******************************************************************************/
-void display_lux(float light)
-{
-    //TODO: change colors of screen (invert colors maybe?)
-    if (light < 200.0)
-    {
-//        ece353_MKII_RGB_LED(false, false, true); // turn on BLUE
-    }
-    else if (light < 500.0)
-    {
-//        ece353_MKII_RGB_LED(false, true, false); // turn on GREEN
-    }
-    else
-    {
-//        ece353_MKII_RGB_LED(true, false, false); // turn on RED
-    }
-
-    // example code to run in main (probably put in task)
-//    float lux = 0.0;
-//
-//        WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;     // stop watchdog timer
-//
-//        ece353_MKII_RGB_IO_Init(false);
-//        i2c_init();
-//        opt3001_init();
-//
-//        while(1){
-//            lux = opt3001_read_lux();
-//            display_lux(lux);
-//        }
-}
-

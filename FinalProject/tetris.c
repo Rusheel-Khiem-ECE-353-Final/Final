@@ -992,7 +992,7 @@ void rotate_S(int dir)
             if (((x < 0) || (x > 9) || (y < 0) || (y > 19))
                     || ((game->board)[y][x].empty == false))
             {
-                success = false; break;
+                success = false;
                 break;
             }
         }
@@ -1113,7 +1113,7 @@ void rotate_Z(int dir)
             if (((x < 0) || (x > 9) || (y < 0) || (y > 19))
                     || ((game->board)[y][x].empty == false))
             {
-                success = false; break;
+                success = false;
                 break;
             }
         }
@@ -1406,7 +1406,7 @@ void enable_fast_fall()
 {
     if (!(game->fast_fall))
     {
-        (game->fall_speed) *= 3;
+        (game->fall_speed) *= 5;
         game->fast_fall = true;
     }
 }
@@ -1418,7 +1418,7 @@ void disable_fast_fall()
 {
     if (game->fast_fall)
     {
-        (game->fall_speed) /= 3;
+        (game->fall_speed) /= 5;
         game->fast_fall = false;
     }
 }

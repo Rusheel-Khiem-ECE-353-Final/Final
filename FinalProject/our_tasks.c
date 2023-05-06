@@ -142,7 +142,7 @@ void task_MKII_S2(void *pvParameters) {
 void task_music_buzzer(void *pvParameters) {
 	while (1) {
 		ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
-		//music_play_song();
+		music_play_song();
 	}
 }
 
@@ -183,9 +183,6 @@ void task_screen_LCD(void *pvParameters) {
 		int draw_col;
 		Block block;
 		uint16_t block_color;
-
-
-
 
 		// draw left side of board (game board and pieces)
 		// black game board

@@ -36,11 +36,6 @@ void opt3001_init(void);
  ******************************************************************************/
 float opt3001_read_lux(void);
 
-/******************************************************************************
- * Changes the LCD screen's colors based on the lux
- *******************************************************************************/
-void display_lux(float light);
-
 /*
  * Busy waits for a given number of SMCLK clock cycles
  *
